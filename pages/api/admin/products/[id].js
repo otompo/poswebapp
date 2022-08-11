@@ -1,13 +1,12 @@
 import nc from 'next-connect';
 import dbConnect from '../../../../backend/config/dbConnect';
 import { removeProduct } from '../../../../backend/controllers/productController';
-import { isAdmin } from '../../../../backend/middlewares';
-import { isAuthenticatedUser } from '../../../../backend/middlewares/auth';
+import { isAuth, isAdmin } from '../../../../backend/middlewares';
 import onError from '../../../../backend/utils/errors';
 const handler = nc({ onError });
 
 dbConnect();
 
-handler.use(isAuthenticatedUser, isAdmin).delete(removeProduct);
+handler.use(isAuth, isAdmin).delete(removeProduct);
 
 export default handler;

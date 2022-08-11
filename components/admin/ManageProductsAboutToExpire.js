@@ -4,10 +4,7 @@ import AdminRoute from '../routes/AdminRoutes';
 import { MDBDataTable } from 'mdbreact';
 import Layout from '../layout/Layout';
 import moment from 'moment';
-import TextTruncate from 'react-text-truncate';
 import axios from 'axios';
-import { toast } from 'react-hot-toast';
-import Resizer from 'react-image-file-resizer';
 import Loader from '../layout/Loader';
 import FormatCurrency from '../FormatCurrency';
 

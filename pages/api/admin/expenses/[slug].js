@@ -1,8 +1,7 @@
 import nc from 'next-connect';
 import dbConnect from '../../../../backend/config/dbConnect';
-import { isAdmin } from '../../../../backend/middlewares';
+import { isAuth, isAdmin } from '../../../../backend/middlewares';
 import onError from '../../../../backend/utils/errors';
-import { isAuthenticatedUser } from '../../../../backend/middlewares/auth';
 import {
   getSingleExpenses,
   updateExpenses,
@@ -11,7 +10,7 @@ const handler = nc({ onError });
 
 dbConnect();
 
-handler.use(isAuthenticatedUser, isAdmin).get(getSingleExpenses);
-handler.use(isAuthenticatedUser, isAdmin).put(updateExpenses);
+handler.use(isAuth, isAdmin).get(getSingleExpenses);
+handler.use(isAuth, isAdmin).put(updateExpenses);
 
 export default handler;

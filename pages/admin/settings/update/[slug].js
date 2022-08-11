@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { Avatar, Button, Image, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import Layout from '../../../../components/layout/Layout';

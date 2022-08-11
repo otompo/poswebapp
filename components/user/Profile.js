@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import { SyncOutlined } from '@ant-design/icons';
 import { toast } from 'react-hot-toast';
 import { Avatar, Badge, Button, Image, Spin } from 'antd';
 import UserRoute from '../routes/UserRoutes';
-import Resizer from 'react-image-file-resizer';
 import Layout from '../layout/Layout';
 import Loader from '../layout/Loader';
-import { Context } from '../../context';
+import axios from 'axios';
+// import { Context } from '../../context';
 
 const UserProfilePage = () => {
   const router = useRouter();
@@ -28,10 +27,10 @@ const UserProfilePage = () => {
   const [passwordCurrent, setPasswordCurrent] = useState('');
   const [password, setPassword] = useState('');
 
-  const {
-    state: { user },
-    dispatch,
-  } = useContext(Context);
+  // const {
+  //   state: { user },
+  //   dispatch,
+  // } = useContext(Context);
 
   useEffect(() => {
     loadUser();

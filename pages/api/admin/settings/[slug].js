@@ -2,12 +2,12 @@ import nc from 'next-connect';
 import { getAllDetails } from '../../../../backend/controllers/settingsController';
 import dbConnect from '../../../../backend/config/dbConnect';
 import onError from '../../../../backend/utils/errors';
-import { isAuthenticatedUser } from '../../../../backend/middlewares/auth';
+import { isAuth } from '../../../../backend/middlewares';
 
 const handler = nc({ onError });
 
 dbConnect();
 
-handler.use(isAuthenticatedUser).get(getAllDetails);
+handler.use(isAuth).get(getAllDetails);
 
 export default handler;

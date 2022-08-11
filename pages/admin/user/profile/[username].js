@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import AdminRoute from '../../../../components/routes/AdminRoutes';
 import Layout from '../../../../components/layout/Layout';
-
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
-import { Avatar } from 'antd';
+import { toast } from 'react-hot-toast';
 import moment from 'moment';
 import axios from 'axios';
 

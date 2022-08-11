@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { Badge, Avatar, Card } from 'antd';
 import moment from 'moment';
 import axios from 'axios';

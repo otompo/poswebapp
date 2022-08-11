@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { getSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 import { Badge, Spin, Card } from 'antd';
@@ -117,22 +116,5 @@ const EditExpense = () => {
     </Layout>
   );
 };
-
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
-
-  if (!session || !session.user.role.includes('Admin')) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-}
 
 export default EditExpense;

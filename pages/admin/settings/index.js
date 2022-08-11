@@ -1,11 +1,7 @@
 import ManageSettings from '../../../components/admin/ManageSettings';
 
 const Index = () => {
-  return (
-    <>
-      <ManageSettings />
-    </>
-  );
+  return <ManageSettings />;
 };
 
 export default Index;

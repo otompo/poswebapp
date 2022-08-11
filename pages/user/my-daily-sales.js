@@ -1,7 +1,6 @@
 import { Avatar } from 'antd';
 import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
-import { getSession } from 'next-auth/client';
 import React, { useEffect, useState } from 'react';
 import FormatCurrency from '../../components/FormatCurrency';
 import Layout from '../../components/layout/Layout';
@@ -110,22 +109,5 @@ const Index = () => {
     </Layout>
   );
 };
-
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
-}
 
 export default Index;
