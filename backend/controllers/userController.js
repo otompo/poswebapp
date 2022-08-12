@@ -1,5 +1,5 @@
 import User from '../models/userModel';
-import { nanoid } from 'nanoid';
+import bcrypt from 'bcryptjs';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 
@@ -103,7 +103,7 @@ export const getTotalUsersInActive = catchAsync(async (req, res, next) => {
 // get users
 export const getAllUsers = catchAsync(async (req, res) => {
   const users = await User.find({ active: { $ne: false } })
-    .select('-password')
+    .select('-password +active')
     .sort({ createdAt: -1 });
   res.send(users);
 });
@@ -129,28 +129,30 @@ export const readSingleUser = catchAsync(async (req, res, next) => {
   res.send(user);
 });
 
-export const updatePassword = catchAsync(async (req, res, next) => {
-  // Get the user from the database
-  const user = await User.findById(req.user._id).select('+password');
-
+export const updateUserPassword = catchAsync(async (req, res, next) => {
+  const userData = await User.findById(req.user._id).select('+password');
+  const { prevPassword, newPassword, c_password } = req.body;
   // Check id the Posted current password is correct
 
-  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError('your current password is wrong', 401));
+  if (!bcrypt.compareSync(prevPassword, userData.password)) {
+    return next(new AppError('previous password is wrong', 401));
   }
 
-  // If password is correct update password
-  user.password = req.body.password;
-  user.generatedPasword = '';
-  user.passwordConfirm = req.body.passwordConfirm;
-  await user.save();
+  if (c_password !== newPassword) {
+    return next(new AppError('Password do not mach', 500));
+  }
 
-  //Log user in, send password
+  if (!newPassword || newPassword.length < 6) {
+    return next(new AppError('Password should be 6 characters long', 500));
+  }
 
-  // createSendToken(user, 200, res);
-  // const token = signToken(user._id);
-  res.status(200).json({
-    success: true,
-    message: 'Password updated successfully',
-  });
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      generatedPasword: '',
+      password: bcrypt.hashSync(newPassword),
+    },
+    { new: true },
+  );
+  res.send(user);
 });

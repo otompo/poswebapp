@@ -2,8 +2,9 @@ import Category from '../models/categoryModel';
 import Product from '../models/productModel';
 import User from '../models/userModel';
 import catchAsync from '../utils/catchAsync';
-import { nanoid } from 'nanoid';
 import AppError from '../utils/appError';
+import bcrypt from 'bcryptjs';
+import { nanoid } from 'nanoid';
 
 export const currentAdmin = catchAsync(async (req, res) => {
   let user = await User.findById(req.user._id).select('-password');
@@ -20,14 +21,14 @@ export const addStaff = catchAsync(async (req, res, next) => {
   const { name, email, contactNum } = req.body;
   let userExist = await User.findOne({ email }).exec();
   if (userExist) return next(new AppError('Email is take', 404));
-  let password = nanoid(10);
+  let password = nanoid(10).toLowerCase();
   const user = await new User({
     name: name,
     email: email,
     contactNum,
     username: `${nanoid(5)}`,
     role: 'staff',
-    password: password,
+    password: bcrypt.hashSync(password),
     generatedPasword: password,
   }).save();
 
