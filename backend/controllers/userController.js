@@ -90,19 +90,21 @@ export const moveUserToTrash = catchAsync(async (req, res, next) => {
 });
 
 export const getAllUsersInTrash = catchAsync(async (req, res, next) => {
-  const users = await User.find({ active: { $ne: true } });
+  const users = await User.find({ active: false });
 
   res.status(200).json(users);
 });
 
 export const getTotalUsersInActive = catchAsync(async (req, res, next) => {
-  const count = await User.countDocuments({ active: { $ne: true } });
+  const count = await User.countDocuments({ active: false });
   res.send(count);
 });
 
 // get users
 export const getAllUsers = catchAsync(async (req, res) => {
-  const users = await User.find({}).select('-password').sort({ createdAt: -1 });
+  const users = await User.find({ active: { $ne: false } })
+    .select('-password')
+    .sort({ createdAt: -1 });
   res.send(users);
 });
 

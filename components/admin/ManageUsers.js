@@ -30,11 +30,8 @@ const ManageUsers = () => {
 
   useEffect(() => {
     loadUsers();
-    getAllUsersInTrash();
+    getTotalUsersInTrash();
   }, [success]);
-
-  // const router = useRouter();
-  // const { id } = router.query;
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -64,9 +61,9 @@ const ManageUsers = () => {
     }
   };
 
-  const getAllUsersInTrash = async () => {
+  const getTotalUsersInTrash = async () => {
     try {
-      const { data } = await axios.get(`/api/admin/user/inactive`);
+      const { data } = await axios.get(`/api/admin/users/inactive`);
       setTotalInactive(data);
     } catch (err) {
       console.log(err.response.data.message);
@@ -77,7 +74,7 @@ const ManageUsers = () => {
   const moveUserToTrash = async (e, username) => {
     try {
       setSuccess(true);
-      const { data } = await axios.put(`/api/admin/user/trash/${username}`);
+      const { data } = await axios.put(`/api/admin/users/trash/${username}`);
       setSuccess(false);
       toast.success('User move to trash');
     } catch (err) {
@@ -268,7 +265,7 @@ const ManageUsers = () => {
                 <Link href={`/admin/users/trash`}>
                   <a>
                     <Button shape="round" success>
-                      Total Users In Active:{' '}
+                      VIEW USERS INACTIVE:{' '}
                     </Button>
                     <Badge
                       count={totalInactive}

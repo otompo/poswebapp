@@ -101,7 +101,8 @@ export const getNumbers = async (req, res) => {
     const users = await User.countDocuments();
     const categories = await Category.countDocuments();
     const products = await Product.countDocuments();
-    return res.json({ users, categories, products });
+    const usersInactive = await User.countDocuments({ active: false });
+    return res.json({ users, categories, products, usersInactive });
   } catch (err) {
     console.log(err);
   }

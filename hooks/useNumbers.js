@@ -6,6 +6,7 @@ const useNumbers = () => {
   const [users, setUsers] = useState('');
   const [categories, setCategories] = useState('');
   const [products, setProducts] = useState('');
+  const [usersInactive, setUsersInactive] = useState('');
 
   useEffect(() => {
     getNumbers();
@@ -17,6 +18,7 @@ const useNumbers = () => {
       setUsers(data.users);
       setCategories(data.categories);
       setProducts(data.products);
+      setUsersInactive(data.usersInactive);
     } catch (err) {
       console.log(err);
     }
@@ -26,6 +28,7 @@ const useNumbers = () => {
     users,
     categories,
     products,
+    usersInactive,
   };
 };
 

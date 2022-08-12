@@ -62,12 +62,8 @@ const AdminNav = () => {
         </a>
       </Link>
 
-      <Link href="/admin/manage-users">
-        <a
-          className={`nav-link  ${
-            current === '/admin/manage-users' && 'active'
-          }`}
-        >
+      <Link href="/admin/users">
+        <a className={`nav-link  ${current === '/admin/users' && 'active'}`}>
           Manage Staff
         </a>
       </Link>
