@@ -1,3 +1,5 @@
+import Category from '../models/categoryModel';
+import Product from '../models/productModel';
 import User from '../models/userModel';
 import catchAsync from '../utils/catchAsync';
 import { nanoid } from 'nanoid';
@@ -93,3 +95,14 @@ export const removeUserAsAdmin = catchAsync(async (req, res, next) => {
   res.send({ ok: true });
   // console.log(roleUpdated);
 });
+
+export const getNumbers = async (req, res) => {
+  try {
+    const users = await User.countDocuments();
+    const categories = await Category.countDocuments();
+    const products = await Product.countDocuments();
+    return res.json({ users, categories, products });
+  } catch (err) {
+    console.log(err);
+  }
+};

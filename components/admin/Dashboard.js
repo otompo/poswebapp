@@ -5,21 +5,16 @@ import axios from 'axios';
 import Card from './Card';
 import { Line } from 'react-chartjs-2';
 import Loader from '../layout/Loader';
-import { toast } from 'react-hot-toast';
 import moment from 'moment';
+import useNumbers from '../../hooks/useNumbers';
 
 const Dashboard = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [products, setProduts] = useState([]);
-  const [usersTotal, setUsersTotal] = useState([]);
-  const [totalSales, setTotalSales] = useState([]);
-  const [category, setCategory] = useState([]);
+  const [totalSales, setTotalSales] = useState('');
   const [dailySales, setDailySales] = useState([]);
+  const { users, categories, products } = useNumbers();
 
   useEffect(() => {
-    getTotalUsers();
-    showCategory();
-    showProduct();
     getTotalSales();
     showDailySales();
   }, []);
@@ -35,51 +30,12 @@ const Dashboard = ({ children }) => {
     }
   };
 
-  const showProduct = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(`/api/admin/products`);
-      setProduts(data.total);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      toast.error(err.response.data.message);
-      setLoading(false);
-    }
-  };
-
-  const showCategory = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(`/api/admin/category`);
-      //console.log(data);
-      setCategory(data.total);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
-
-  const getTotalUsers = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(`/api/admin/users`);
-      // console.log(data);
-      setUsersTotal(data);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
-
   const getTotalSales = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/admin/sales`);
-      // console.log(data);
-      setTotalSales(data.total);
+      const { data } = await axios.get(`/api/admin/getNumbers/sales`);
+
+      setTotalSales(data.totalSales);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -125,27 +81,27 @@ const Dashboard = ({ children }) => {
             backgroundColor="#33195a"
             icon={<TeamOutlined style={{ color: 'green' }} />}
             cade_title="Total Staff"
-            cade_total={loading ? <Spin /> : usersTotal.length}
+            cade_total={users}
           />
 
           <Card
             backgroundColor="#e3d002"
             icon={<BookOutlined style={{ color: 'green' }} />}
             cade_title="Total Products"
-            cade_total={loading ? <Spin /> : products}
+            cade_total={products}
           />
 
           <Card
             backgroundColor="#2F02E3"
             icon={<CaretUpOutlined style={{ color: 'green' }} />}
             cade_title="Total Categories"
-            cade_total={loading ? <Spin /> : category}
+            cade_total={categories}
           />
           <Card
             backgroundColor="#22cc56"
             icon={<CaretUpOutlined style={{ color: 'green' }} />}
             cade_title="Total Sales"
-            cade_total={loading ? <Spin /> : totalSales}
+            cade_total={totalSales}
           />
         </div>
       </div>

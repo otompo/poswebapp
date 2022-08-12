@@ -22,11 +22,6 @@ export const signin = catchAsync(async (req, res, next) => {
 
   if (user && bcrypt.compareSync(req.body.password, user.password)) {
     const token = signToken(user);
-
-    user.password = undefined;
-    user.secret = undefined;
-    user.generatedPasword = undefined;
-
     res.send({
       token,
       user,

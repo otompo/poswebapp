@@ -12,9 +12,6 @@ export const getMonthlyPlan = catchAsync(async (req, res, next) => {
         _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
         numOfSales: { $sum: 1 },
         totalSales: { $sum: '$grandTotal' },
-        // avgPrice: { $avg: '$grandTotal' },
-        // minPrice: { $min: '$grandTotal' },
-        // maxPrice: { $max: '$grandTotal' },
         quantitySold: { $sum: '$quantitySold' },
       },
     },
@@ -97,4 +94,18 @@ export const getMonthlyPlan = catchAsync(async (req, res, next) => {
     productStats,
     reports,
   });
+});
+
+export const getTotalSales = catchAsync(async (req, res, next) => {
+  const sales = await Sales.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalSales: { $sum: '$grandTotal' },
+        // quantitySold: { $sum: '$quantitySold' },
+      },
+    },
+  ]);
+
+  res.status(200).json(sales[0]);
 });
