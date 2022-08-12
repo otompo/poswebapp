@@ -9,8 +9,6 @@ const AuthProvider = ({ children }) => {
     token: '',
   });
 
-  console.log('user', auth.token);
-
   // config axios
   if (process.server) {
     axios.defaults.baseURL = process.env.API;
