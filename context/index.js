@@ -8,14 +8,15 @@ const AuthProvider = ({ children }) => {
     user: null,
     token: '',
   });
+  const token = auth && auth.token ? auth.token : '';
 
   // config axios
   if (process.server) {
     axios.defaults.baseURL = process.env.API;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   } else {
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }
 
   useEffect(() => {
