@@ -71,7 +71,7 @@ export const makeUserAdmin = catchAsync(async (req, res, next) => {
   const roleUpdated = await User.findByIdAndUpdate(
     user._id,
     {
-      $addToSet: { role: 'Admin' },
+      $addToSet: { role: 'admin' },
     },
     { new: true },
   );
@@ -88,7 +88,7 @@ export const removeUserAsAdmin = catchAsync(async (req, res, next) => {
   const roleUpdated = await User.findByIdAndUpdate(
     user._id,
     {
-      $pull: { role: 'Admin' },
+      $pull: { role: 'admin' },
     },
     { new: true },
   );

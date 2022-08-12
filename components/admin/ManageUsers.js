@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { MDBDataTable } from 'mdbreact';
-import { Tooltip, Modal, Avatar, Image } from 'antd';
+import { Tooltip, Modal, Badge, Button } from 'antd';
 import {
-  EyeOutlined,
   DeleteOutlined,
   CoffeeOutlined,
-  ExclamationCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import AdminRoute from '../routes/AdminRoutes';
 import Layout from '../layout/Layout';
 import moment from 'moment';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
-import Loader from '../layout/Loader';
 import Link from 'next/link';
+import AdminRoute from '../routes/AdminRoutes';
 
 const ManageUsers = () => {
   const { confirm } = Modal;
   const [values, setValues] = useState({
     name: '',
     email: '',
+    contactNum: '',
     loading: false,
   });
   const [users, setUsers] = useState([]);
@@ -29,13 +26,19 @@ const ManageUsers = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [totalInactive, setTotalInactive] = useState('');
 
   useEffect(() => {
     loadUsers();
+    getAllUsersInTrash();
   }, [success]);
 
-  const router = useRouter();
-  const { id } = router.query;
+  // const router = useRouter();
+  // const { id } = router.query;
+
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -61,116 +64,104 @@ const ManageUsers = () => {
     }
   };
 
-  const handleDelete = (index) => {
-    confirm({
-      title: `Are you sure remove this User`,
-      icon: <ExclamationCircleOutlined />,
-      content: 'It will be deleted permanentily if you click Yes',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-
-      onOk: async () => {
-        try {
-          setSuccess(true);
-          let allusers = users;
-          const removed = allusers.splice(index, 1);
-          setUsers(allusers);
-          // send request to server
-          const { data } = await axios.delete(
-            `/api/admin/users/${removed[0]._id}`,
-          );
-          toast.success('User Deleted Successfully');
-          setSuccess(false);
-        } catch (err) {
-          console.log(err.response.data.messag);
-          toast.error(err.response.data.message);
-          setSuccess(false);
-        }
-      },
-      onCancel() {
-        return;
-      },
-    });
+  const getAllUsersInTrash = async () => {
+    try {
+      const { data } = await axios.get(`/api/admin/user/inactive`);
+      setTotalInactive(data);
+    } catch (err) {
+      console.log(err.response.data.message);
+      // toast.error(err.response.data.message);
+    }
   };
 
-  const removeUserAsAdmin = (index) => {
-    confirm({
-      title: `Are you sure remove this User as an Admin`,
-      icon: <ExclamationCircleOutlined />,
-      content: 'User Will no more be an Admin if you click yes',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk: async () => {
-        try {
-          let allusers = users;
-          const removed = allusers.splice(index, 1);
-          // setSuccess(true);
-          const { data } = await axios.put(
-            `/api/admin/users/removeadmin/${removed[0]._id}`,
-          );
-          // setUsers(allusers);
-          toast.success('Removed Successfully');
-          // setSuccess(false);
-        } catch (err) {
-          console.log(err.response.data.message);
-          // toast.error(err.response.data.message);
-          // setSuccess(false);
-        }
-      },
-      onCancel() {
-        return;
-      },
-    });
-  };
-
-  const makeUserAnAdmin = async (e, id) => {
+  const moveUserToTrash = async (e, username) => {
     try {
       setSuccess(true);
-      const { data } = await axios.put(`/api/admin/users/addadmin/${id}`);
+      const { data } = await axios.put(`/api/admin/user/trash/${username}`);
       setSuccess(false);
-      toast.success('Great! User is now an admin');
+      toast.success('User move to trash');
     } catch (err) {
-      console.log(err.response.data.messag);
+      // console.log(err);
+      toast.error(err.response.data.message);
+      setSuccess(false);
+    }
+  };
+
+  const makeUserAnAdmin = async (e, username) => {
+    // console.log(username);
+    try {
+      setSuccess(true);
+      const { data } = await axios.put(`/api/admin/users/makeuser/${username}`);
+      setSuccess(false);
+      toast.success('success');
+    } catch (err) {
+      console.log(err.response.data.message);
       // toast.error(err.response.data.message);
       setSuccess(false);
     }
   };
 
-  const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
+  const removeUserAsAdmin = async (e, username) => {
+    console.log(username);
+    try {
+      setSuccess(true);
+      const { data } = await axios.patch(
+        `/api/admin/users/makeuser/${username}`,
+      );
+      setSuccess(false);
+      toast.success('success');
+    } catch (err) {
+      console.log(err.response.data.message);
+      // toast.error(err.response.data.message);
+      setSuccess(false);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setValues({ ...values, name: '', email: '', loading: true });
+      setValues({
+        ...values,
+        name: '',
+        email: '',
+        contactNum: '',
+        loading: true,
+      });
       setSuccess(true);
-      const { data } = await axios.post(`/api/admin/addstaff`, {
+      const { data } = await axios.post(`/api/admin/users`, {
         ...values,
       });
       toast.success('Success');
-      setValues({ ...values, name: '', email: '', loading: false });
+      setValues({
+        ...values,
+        name: '',
+        email: '',
+        contactNum: '',
+        loading: false,
+      });
       setSuccess(false);
     } catch (err) {
-      console.log(err.response.data.message);
       toast.error(err.response.data.message);
-      setValues({ ...values, name: '', email: '', loading: false });
       setSuccess(false);
     }
   };
+
   const setData = () => {
     const data = {
       columns: [
         {
-          label: 'Image',
-          field: 'image',
+          label: 'Name',
+          field: 'name',
           sort: 'asc',
         },
         {
-          label: 'Name',
-          field: 'name',
+          label: 'Contact Number',
+          field: 'contactNum',
+          sort: 'asc',
+        },
+        {
+          label: 'Email',
+          field: 'email',
           sort: 'asc',
         },
         {
@@ -183,11 +174,13 @@ const ManageUsers = () => {
           field: 'role',
           sort: 'asc',
         },
+
         {
-          label: 'Email',
-          field: 'email',
+          label: 'Generated Password',
+          field: 'genearatedpassword',
           sort: 'asc',
         },
+
         {
           label: 'Action',
           field: 'action',
@@ -200,74 +193,56 @@ const ManageUsers = () => {
     users &&
       users.forEach((user, index) => {
         data.rows.push({
-          image: user.profileImage ? (
-            <Avatar
-              size={30}
-              src={
-                <Image
-                  src={user && user.profileImage && user.profileImage.Location}
-                />
-              }
-            />
-          ) : (
-            <Avatar
-              size={30}
-              src={<Image src={user && user.picture} preview={false} />}
-            />
-          ),
-          name: `${user.name}`,
+          name: `${user && user.name}`,
+          contactNum: `${user && user.contactNum}`,
+          email: `${user && user.email}`,
           join: `${moment(user.createdAt).fromNow()}`,
-          role: `${user.role}`,
-          email: `${user.email}`,
+          role: `${user && user.role}`,
+          genearatedpassword: `${
+            user && user.generatedPasword ? user.generatedPasword : ''
+          }`,
           action: (
             <>
               <div className="row">
                 <div className="col-md-6">
-                  <Link
-                    key={index}
-                    href={`/admin/user/profile/${user.username}`}
-                  >
-                    <a>
-                      <EyeOutlined className="text-success d-flex justify-content-center" />
-                    </a>
-                  </Link>
-                </div>
-                <div className="col-md-3">
-                  {user && user.role.includes('Admin') ? (
+                  {user && user.role.includes('admin') ? (
                     <Tooltip title="Remove User as Admin">
                       <span
-                        onClick={() => removeUserAsAdmin(index)}
-                        // className="pt-1 pl-3"
+                        onClick={(e) =>
+                          removeUserAsAdmin(e, user && user.username)
+                        }
                       >
                         <CoffeeOutlined
                           className="text-danger d-flex justify-content-center "
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: 'pointer', fontSize: 25 }}
                         />
                       </span>
                     </Tooltip>
                   ) : (
                     <Tooltip title="Make User as Admin">
                       <span
-                        onClick={(e) => makeUserAnAdmin(e, user._id)}
+                        onClick={(e) =>
+                          makeUserAnAdmin(e, user && user.username)
+                        }
                         // className="pt-1 pl-3"
                       >
                         <CoffeeOutlined
                           className="text-success d-flex justify-content-center "
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: 'pointer', fontSize: 25 }}
                         />
                       </span>
                     </Tooltip>
                   )}
                 </div>
-                <div className="col-md-3">
-                  <Tooltip title="Delete User">
+                <div className="col-md-6">
+                  <Tooltip title="Trash User">
                     <span
-                      onClick={() => handleDelete(index)}
+                      onClick={(e) => moveUserToTrash(e, user && user.username)}
                       // className="pt-1 pl-3"
                     >
                       <DeleteOutlined
                         className="text-danger d-flex justify-content-center "
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', fontSize: 25 }}
                       />
                     </span>
                   </Tooltip>
@@ -280,16 +255,32 @@ const ManageUsers = () => {
 
     return data;
   };
-
   return (
     <Layout title="Manage Staff">
       <AdminRoute>
         <div className="container m-2">
-          <div className="row">
-            <div className="col-md-4">
+          <div className="row my-4">
+            <div className="col-md-3">
               <h1 className="lead">Manage Staff</h1>
             </div>
-            <div className="col-md-4 offset-md-2">
+            <div className="col-md-3">
+              <Tooltip title="View Users in Trash">
+                <Link href={`/admin/users/trash`}>
+                  <a>
+                    <Button shape="round" success>
+                      Total Users In Active:{' '}
+                    </Button>
+                    <Badge
+                      count={totalInactive}
+                      style={{ backgroundColor: '#E7267A' }}
+                      className="pb-2 mr-2 my-2 m-1"
+                      showZero
+                    />
+                  </a>
+                </Link>
+              </Tooltip>
+            </div>
+            <div className="col-md-6">
               <p
                 className="btn text-white float-right btn-success"
                 onClick={showModal}
@@ -298,6 +289,7 @@ const ManageUsers = () => {
                 Add Staff
               </p>
             </div>
+
             <Modal
               title="Add Staff"
               visible={isModalVisible}
@@ -328,9 +320,22 @@ const ManageUsers = () => {
                     required
                   />
                 </div>
+
+                <div className="form-group">
+                  <input
+                    type="text"
+                    name="contactNum"
+                    value={values.contactNum}
+                    onChange={handleChange}
+                    className="form-control mb-4 p-2"
+                    placeholder="Enter contact number"
+                    required
+                  />
+                </div>
+
                 <div className="d-grid gap-2 my-2 ">
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary btn-block"
                     disabled={!values.name || !values.email}
                     type="submit"
                   >
@@ -342,17 +347,14 @@ const ManageUsers = () => {
           </div>
         </div>
         <hr />
-        {loading ? (
-          <Loader />
-        ) : (
-          <MDBDataTable
-            data={setData()}
-            className="px-3"
-            bordered
-            striped
-            hover
-          />
-        )}
+
+        <MDBDataTable
+          data={setData()}
+          className="px-3"
+          bordered
+          striped
+          hover
+        />
       </AdminRoute>
     </Layout>
   );

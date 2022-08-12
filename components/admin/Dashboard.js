@@ -7,6 +7,7 @@ import { Line } from 'react-chartjs-2';
 import Loader from '../layout/Loader';
 import moment from 'moment';
 import useNumbers from '../../hooks/useNumbers';
+import FormatCurrency from '../../helpers/FormatCurrency';
 
 const Dashboard = ({ children }) => {
   const [loading, setLoading] = useState(false);
@@ -85,23 +86,23 @@ const Dashboard = ({ children }) => {
           />
 
           <Card
-            backgroundColor="#e3d002"
+            backgroundColor="#33195a"
             icon={<BookOutlined style={{ color: 'green' }} />}
             cade_title="Total Products"
             cade_total={products}
           />
 
           <Card
-            backgroundColor="#2F02E3"
+            backgroundColor="#33195a"
             icon={<CaretUpOutlined style={{ color: 'green' }} />}
             cade_title="Total Categories"
             cade_total={categories}
           />
           <Card
-            backgroundColor="#22cc56"
+            backgroundColor="#33195a"
             icon={<CaretUpOutlined style={{ color: 'green' }} />}
             cade_title="Total Sales"
-            cade_total={totalSales}
+            cade_total={FormatCurrency(Number(totalSales))}
           />
         </div>
       </div>
