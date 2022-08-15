@@ -151,7 +151,6 @@ const ManageExpenses = () => {
       expenses.forEach((expense, index) => {
         data.rows.push({
           name: `${expense && expense.name}`,
-          //   amount: `GH₵ ${expense && expense.amount.toFixed(2)}`,
           amount: `${FormatCurrency(expense.amount)}`,
           date: `${moment(expense.date).format('LL')}`,
 
@@ -184,6 +183,7 @@ const ManageExpenses = () => {
 
     return data;
   };
+
   return (
     <Layout title="Manage Expenses">
       <AdminRoute>

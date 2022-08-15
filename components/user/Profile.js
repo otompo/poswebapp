@@ -56,7 +56,7 @@ const UserProfilePage = () => {
     e.preventDefault();
     try {
       setValues({ ...values, loading: true });
-      const { data } = await axios.put(`/api/user/update`, {
+      const { data } = await axios.put(`/api/user/updateprofile`, {
         ...values,
       });
 
@@ -87,7 +87,7 @@ const UserProfilePage = () => {
       });
       setPassword('');
       setPasswordCurrent('');
-      toast.success('Password pdated successfully');
+      toast.success('Success');
       setLoading(false);
     } catch (err) {
       toast.error(err.response.data.message);

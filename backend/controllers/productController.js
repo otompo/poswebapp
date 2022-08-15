@@ -143,7 +143,6 @@ export const updateProductQuantity = catchAsync(async (req, res, next) => {
 
 // update product
 export const updateProduct = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   const { name, selectedCategory, costPrice, quantity, sellingPrice } =
     req.body;
 
@@ -199,7 +198,6 @@ export const exportProductData = catchAsync(async (req, res, next) => {
 });
 
 export const importProductData = catchAsync(async (req, res, next) => {
-  // console.log(req.body.csvFile);
   const data = Product.insertMany(req.body.csvFile);
   res.send(data);
 });

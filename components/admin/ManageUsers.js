@@ -265,7 +265,7 @@ const ManageUsers = () => {
                 <Link href={`/admin/users/trash`}>
                   <a>
                     <Button shape="round" success>
-                      VIEW USERS INACTIVE:{' '}
+                      VIEW INACTIVE STAFF:{' '}
                     </Button>
                     <Badge
                       count={totalInactive}

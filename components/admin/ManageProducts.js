@@ -267,7 +267,7 @@ const ManageProducts = () => {
     setFile(e.target.files[0]);
   };
 
-  const handleOnSubmit = async (e) => {
+  const handleProductImport = async (e) => {
     e.preventDefault();
 
     const processCSV = (string, delim = ',') => {
@@ -287,28 +287,17 @@ const ManageProducts = () => {
       setCsvFile(array.slice(0, array.length - 1));
     };
     try {
-      setValues({ ...values, loading: true });
-      setOk(true);
+      // setValues({ ...values, loading: true });
       setSuccess(true);
-      const { data } = await axios.post(`/api/admin/importdata`, {
+      const { data } = await axios.post(`/api/admin/products/importdata`, {
         csvFile,
       });
-      toast.success('Data import Succcess');
-      setFile('');
-      setValues({
-        ...values,
-        name: '',
-        sellingPrice: '',
-        costPrice: '',
-        quantity: '',
-        loading: false,
-      });
+      toast.success('Success');
       setSuccess(false);
-      setOk(false);
+      // setFile("");
     } catch (err) {
-      console.log(err);
+      console.log(err.response);
       setSuccess(false);
-      setOk(false);
     }
     var fileReader = new FileReader();
     if (file) {
@@ -475,8 +464,8 @@ const ManageProducts = () => {
   return (
     <Layout title="Manage Products">
       <AdminRoute>
-        <div className="container-fluid ourWorks">
-          <div className="row  m-4">
+        <div className="container ourWorks">
+          <div className="row  mt-3">
             <div className="col-md-2">
               <Link href="/admin/products/instock">
                 <a>
@@ -539,8 +528,8 @@ const ManageProducts = () => {
             </div>
           </div>
           <hr />
-          <div className="row m-4">
-            <div className="col-md-3 offset-md-2 ">
+          <div className="row mt-4">
+            <div className="col-md-3">
               <p
                 className="btn text-white  btn-success block"
                 onClick={() => {
@@ -552,7 +541,7 @@ const ManageProducts = () => {
                 ADD PRODUCT
               </p>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-4">
               <form>
                 <label className="btn btn-primary text-center ">
                   {file && file ? file.name : '  SELECT CSV FILE'}
@@ -566,14 +555,14 @@ const ManageProducts = () => {
                   />
                 </label>
                 <button
-                  className="btn btn-info"
+                  className="btn btn-info mb-2"
                   type="primary"
                   onClick={(e) => {
-                    handleOnSubmit(e);
+                    handleProductImport(e);
                   }}
                   style={{ marginLeft: 10 }}
                 >
-                  SUBMIT
+                  CLICK TO IMPORT
                 </button>
               </form>
             </div>

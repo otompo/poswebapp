@@ -20,8 +20,8 @@ const ManageCategories = () => {
     name: '',
     loading: false,
   });
-  const [success, setSuccess] = useState(false);
   const [ok, setOk] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [categories, setCategories] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -154,6 +154,7 @@ const ManageCategories = () => {
 
     return data;
   };
+
   return (
     <Layout title="Manage Categories">
       <AdminRoute>

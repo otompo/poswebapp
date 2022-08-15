@@ -22,7 +22,7 @@ const Login = () => {
       });
       setAuth(data);
       // save in local storage
-      window.localStorage.setItem('user', JSON.stringify(data));
+      localStorage.setItem('user', JSON.stringify(data));
       toast.success('Success');
       router.push('/user');
       setLoading(false);

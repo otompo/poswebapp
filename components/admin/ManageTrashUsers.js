@@ -149,7 +149,7 @@ function ManageTrashUsers(props) {
               <Link href={`/admin/users`} className="bg-primary">
                 <a>
                   <Button shape="round" success>
-                    TOTAL USERS INACTIVE:{' '}
+                    TOTAL INACTIVE STAFF:{' '}
                   </Button>
                   <Badge
                     count={totalInactive}

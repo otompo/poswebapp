@@ -49,7 +49,7 @@ export const readUser = async (req, res) => {
   }
 };
 
-export const updateUserProfile = catchAsync(async (req, res, next) => {
+export const updateProfile = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id).select('+active');
   user.name = req.body.name;
   user.email = req.body.email;
@@ -69,7 +69,7 @@ export const updateUserProfile = catchAsync(async (req, res, next) => {
   });
 });
 
-export const updateUserPassword = catchAsync(async (req, res, next) => {
+export const updatePassword = catchAsync(async (req, res, next) => {
   const userData = await User.findById(req.user._id).select('+password');
   const { prevPassword, newPassword, c_password } = req.body;
   // Check id the Posted current password is correct
