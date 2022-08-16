@@ -8,7 +8,6 @@ const handler = nc({ onError });
 
 dbConnect();
 
-// handler.get(getAllReviews);
 handler.use(isAuth, isAdmin).get(getAllSales);
 
 export default handler;

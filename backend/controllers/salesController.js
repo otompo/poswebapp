@@ -123,6 +123,60 @@ export const totalSalesForSelectedDay = catchAsync(async (req, res, next) => {
   );
 });
 
+// user daily sales
+export const userDailySalesByDate = catchAsync(async (req, res, next) => {
+  if (req.query.startdate && req.query.enddate) {
+    startDate = new Date(req.query.startdate);
+    startDate.setHours(0, 0, 0, 0);
+
+    endDate = new Date(req.query.enddate);
+    endDate.setHours(23, 59, 59, 999);
+  } else {
+    // beginning of current day
+    var startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+
+    // end of current day
+    var endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+  }
+  Sales.find(
+    {
+      saler: req.user._id,
+      dateTime: { $gte: startDate.toJSON(), $lte: endDate.toJSON() },
+    },
+    function (err, docs) {
+      var result = {
+        dateTime: startDate,
+      };
+
+      if (docs) {
+        var grandTotal = docs.reduce(function (p, c) {
+          return p + c.grandTotal;
+        }, 0.0);
+        var quantitySold = docs.reduce(function (p, c) {
+          return p + c.quantitySold;
+        }, 0.0);
+
+        result.grandTotal = grandTotal;
+        result.quantitySold = quantitySold;
+        res.send({
+          result,
+          docs,
+        });
+      } else {
+        result.grandTotal = 0;
+        res.send({
+          result,
+          docs,
+        });
+      }
+    },
+  )
+    .populate('saler', 'id name')
+    .sort({ dateTime: -1 });
+});
+
 // GET sales for a particular date
 export const getSalesForaParticulardate = catchAsync(async (req, res, next) => {
   if (req.query.startdate && req.query.enddate) {
@@ -211,3 +265,60 @@ export const getSalesChartInfo = catchAsync(async (req, res, next) => {
     });
   });
 });
+
+// get users daily sales by admin
+
+export const adminGetUserDailySalesByDate = catchAsync(
+  async (req, res, next) => {
+    if (req.query.startdate && req.query.enddate) {
+      startDate = new Date(req.query.startdate);
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date(req.query.enddate);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      // beginning of current day
+      var startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+
+      // end of current day
+      var endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+    }
+    Sales.find(
+      {
+        saler: req.query.saler,
+        dateTime: { $gte: startDate.toJSON(), $lte: endDate.toJSON() },
+      },
+      function (err, docs) {
+        var result = {
+          dateTime: startDate,
+        };
+
+        if (docs) {
+          var grandTotal = docs.reduce(function (p, c) {
+            return p + c.grandTotal;
+          }, 0.0);
+          var quantitySold = docs.reduce(function (p, c) {
+            return p + c.quantitySold;
+          }, 0.0);
+
+          result.grandTotal = grandTotal;
+          result.quantitySold = quantitySold;
+          res.send({
+            result,
+            docs,
+          });
+        } else {
+          result.grandTotal = 0;
+          res.send({
+            result,
+            docs,
+          });
+        }
+      },
+    )
+      .populate('saler', 'id name')
+      .sort({ dateTime: -1 });
+  },
+);

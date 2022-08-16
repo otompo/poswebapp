@@ -8,7 +8,6 @@ const handler = nc({ onError });
 
 dbConnect();
 
-// handler.get(getAllReviews);
 handler.get(getSalesChartInfo);
 
 export default handler;

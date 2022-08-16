@@ -49,19 +49,13 @@ const UserNav = () => {
         </a>
       </Link> */}
 
-      <Link href="/user/my-daily-sales">
+      <Link href="/user/mydailysales">
         <a
           className={`nav-link  ${
-            current === '/user/my-daily-sales' && 'active'
+            current === '/user/mydailysales' && 'active'
           }`}
         >
           My Dialy Sales
-        </a>
-      </Link>
-
-      <Link href="/user/bills">
-        <a className={`nav-link  ${current === '/user/bills' && 'active'}`}>
-          Bills
         </a>
       </Link>
 

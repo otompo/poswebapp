@@ -1,20 +1,23 @@
-import { Avatar } from 'antd';
 import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
+import { Button, Modal, Avatar } from 'antd';
 import React, { useRef, useEffect, useState } from 'react';
+import FormatCurrency from '../../../components/FormatCurrency';
+import UserRoute from '../../../components/routes/UserRoutes';
 import Layout from '../../../components/layout/Layout';
 import Loader from '../../../components/layout/Loader';
-import UserRoute from '../../../components/routes/UserRoutes';
-import ReactToPrint from 'react-to-print';
-import { Modal } from 'antd';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { PrinterOutlined } from '@ant-design/icons';
-import FormatCurrency from '../../../components/FormatCurrency';
-import moment from 'moment';
-import renderHTML from 'react-render-html';
 import useSettings from '../../../hooks/useSettings';
+import renderHTML from 'react-render-html';
+import moment from 'moment';
+import ReactToPrint from 'react-to-print';
 const { confirm } = Modal;
 
 const Index = () => {
+  const [dateRange, setDateRange] = useState([new Date(), new Date()]);
+  const [startdate, enddate] = dateRange;
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -49,19 +52,21 @@ const Index = () => {
   };
   const componentRef = useRef();
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   useEffect(() => {
-    showSales();
+    handleSalesSubmit();
   }, []);
 
-  const showSales = async () => {
+  const handleSalesSubmit = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/sales`);
-      setSales(data.sales);
+      const { data } = await axios.get(
+        `/api/admin/sales/userdailysalesbydate?startdate=${moment(
+          startdate,
+        ).format('Y/MM/DD')}&enddate=${moment(enddate).format('Y/MM/DD')}`,
+      );
+      setSales(data.docs);
+      // setQuantitySold(data.result.quantitySold);
+      // setTotalAmount(data.result.grandTotal);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -141,9 +146,60 @@ const Index = () => {
   return (
     <Layout>
       <UserRoute>
-        <h1 className="lead">Bills</h1>
+        <div className="row my-3">
+          <h1 className="lead">MY Daily Sales</h1>
+        </div>
         <hr />
-        <div className="container">
+        <div className="row my-2">
+          <div className="col-md-6  offset-md-2 text-center">
+            <h4 className="lead mb-4">
+              SELECT START AND END DATE FOR SALES IN A DAY
+            </h4>
+            <div className="row">
+              <div className="col-md-8">
+                <DatePicker
+                  selectsRange={true}
+                  className="w-100"
+                  startDate={startdate}
+                  endDate={enddate}
+                  dateFormat="MMMM d, yyyy"
+                  onChange={(update) => {
+                    setDateRange(update);
+                  }}
+                  isClearable={true}
+                  withPortal
+                />
+              </div>
+              <div className="col-md-4">
+                <Button
+                  shape="round"
+                  type="primary"
+                  onClick={handleSalesSubmit}
+                >
+                  Submit
+                </Button>
+              </div>
+            </div>
+          </div>
+          {/* <div className="col-md-6 text-center">
+            <div className="row">
+              <div className="col-md-6">
+                <h6 className="d-inline text-uppercase">AMOUNT</h6>{' '}
+                <Avatar size={100} style={{ backgroundColor: '#87d068' }}>
+                  {totalAmount && FormatCurrency(totalAmount)}
+                </Avatar>
+              </div>
+              <div className="col-md-6">
+                <h6 className="d-inline text-uppercase">QTY SOLD</h6>{' '}
+                <Avatar size={100} style={{ backgroundColor: '#87d068' }}>
+                  {quantitySold && quantitySold}
+                </Avatar>
+              </div>
+            </div>
+          </div> */}
+        </div>
+        <hr />
+        <div className="container-fluid">
           <div className="row">
             <div className="col-md-12">
               {loading ? (

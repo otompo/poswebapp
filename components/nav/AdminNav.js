@@ -41,9 +41,20 @@ const AdminNav = () => {
             current === '/admin/daily-sales' && 'active'
           }`}
         >
-          Manage Dialy Sales
+          Manage Daily Sales
         </a>
       </Link>
+
+      <Link href="/admin/daily-sales/user">
+        <a
+          className={`nav-link  ${
+            current === '/admin/daily-sales/user' && 'active'
+          }`}
+        >
+          Manage User Daily Sales
+        </a>
+      </Link>
+
       <Link href="/admin/expenses">
         <a className={`nav-link  ${current === '/admin/expenses' && 'active'}`}>
           Manage Expenses

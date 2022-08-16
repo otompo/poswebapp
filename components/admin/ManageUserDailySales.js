@@ -6,7 +6,7 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { PrinterOutlined } from '@ant-design/icons';
 import Loader from '../layout/Loader';
-import { Button, Modal, Avatar } from 'antd';
+import { Button, Modal, Select } from 'antd';
 import ReactToPrint from 'react-to-print';
 import FormatCurrency from '../FormatCurrency';
 import DatePicker from 'react-datepicker';
@@ -14,8 +14,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { MDBDataTable } from 'mdbreact';
 
 const { confirm } = Modal;
+const { Option } = Select;
 
-const ManageDailySales = () => {
+function ManageUserDailySales(props) {
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
   const [startdate, enddate] = dateRange;
   const [sales, setSales] = useState([]);
@@ -23,6 +24,8 @@ const ManageDailySales = () => {
   const [quantitySold, setQuantitySold] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loadedUsers, setLoadedUsers] = useState([]);
+  const [saler, setSaler] = useState('');
 
   const showPrintData = () => {
     return showModal();
@@ -42,10 +45,6 @@ const ManageDailySales = () => {
 
   const componentRef = useRef();
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   const onChange = (dates) => {
     const [start, end] = dates;
     setStartDate(start);
@@ -54,15 +53,29 @@ const ManageDailySales = () => {
 
   useEffect(() => {
     handleSalesSubmit();
+    loadUsers();
   }, []);
 
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`/api/admin/users`);
+      setLoadedUsers(data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err.response.data);
+      setLoading(false);
+    }
+  };
   const handleSalesSubmit = async () => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `/api/admin/sales/salesforaparticulardate?startdate=${moment(
+        `/api/admin/sales/admingetuserdailysalesbydate?startdate=${moment(
           startdate,
-        ).format('Y/MM/DD')}&enddate=${moment(enddate).format('Y/MM/DD')}`,
+        ).format('Y/MM/DD')}&enddate=${moment(enddate).format(
+          'Y/MM/DD',
+        )}&saler=${saler}`,
       );
       setSales(data.docs);
       setQuantitySold(data.result.quantitySold);
@@ -129,7 +142,7 @@ const ManageDailySales = () => {
   };
 
   return (
-    <Layout title="Manage Daily Sales">
+    <Layout title="Manage User Daily Sales">
       <AdminRoute>
         <div className="row my-3">
           <div className="col-md-10">
@@ -143,12 +156,13 @@ const ManageDailySales = () => {
         </div>
         <hr />
 
-        <div className="row my-5">
+        <div className="row my-3">
           <div className="col-md-6 text-center">
-            <h4 className="lead mb-4">
-              SELECT START AND END DATE FOR SALES IN A DAY
-            </h4>
-            <div className="row">
+            <div className="row my-3">
+              <h4 className="lead mb-2">
+                SELECT START AND END DATE FOR SALES IN A DAY
+              </h4>
+
               <div className="col-md-8">
                 <DatePicker
                   selectsRange={true}
@@ -162,11 +176,32 @@ const ManageDailySales = () => {
                   isClearable={true}
                 />
               </div>
-              <div className="col-md-4">
+            </div>
+            <div className="row my-3">
+              <div className="col-md-4 offset-md-2">
+                <h4 className="lead mb-2">SELECT SELLER</h4>
+              </div>
+              <div className="col-md-8">
+                <Select
+                  allowClear={true}
+                  placeholder="Select user"
+                  style={{ width: '100%' }}
+                  onChange={(v) => setSaler(v)}
+                >
+                  {loadedUsers &&
+                    loadedUsers.map((item) => (
+                      <Option key={item._id}>{item.name}</Option>
+                    ))}
+                </Select>
+              </div>
+            </div>
+            <div className="row my-3">
+              <div className="col-md-8">
                 <Button
-                  shape="round"
+                  //   shape="round"
                   type="primary"
                   onClick={handleSalesSubmit}
+                  block
                 >
                   Submit
                 </Button>
@@ -176,16 +211,23 @@ const ManageDailySales = () => {
           <div className="col-md-6 text-center">
             <div className="row">
               <div className="col-md-6">
-                <h6 className="d-inline text-uppercase">AMOUNT</h6>{' '}
-                <Avatar size={100} style={{ backgroundColor: '#87d068' }}>
-                  {totalAmount && FormatCurrency(totalAmount)}
-                </Avatar>
+                <div className="containerItems">
+                  <div className="content">
+                    <h4 className="d-inline">Amount</h4>
+                    <p className="d-inline">
+                      {' '}
+                      {totalAmount && FormatCurrency(totalAmount)}{' '}
+                    </p>
+                  </div>
+                </div>
               </div>
               <div className="col-md-6">
-                <h6 className="d-inline text-uppercase">QTY SOLD</h6>{' '}
-                <Avatar size={100} style={{ backgroundColor: '#87d068' }}>
-                  {quantitySold && quantitySold}
-                </Avatar>
+                <div className="containerItems">
+                  <div className="content">
+                    <h4>QTY SOLD</h4>
+                    <p> {quantitySold && quantitySold} </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -217,7 +259,14 @@ const ManageDailySales = () => {
           <div className="invoice__preview bg-white  rounded">
             <div ref={componentRef} className="p-5" id="invoice__preview">
               <h5 className="text-uppercase">
-                LIST OF SALES FROM{' '}
+                SALES FOR{' '}
+                <span className="text-primary">
+                  {sales && sales.length ? sales[0].saler.name : null}
+                </span>
+                {/* <pre>{JSON.stringify(sales.length, null, 3)}</pre> */}
+              </h5>
+              <h5 className="text-uppercase">
+                FROM{' '}
                 <span className="text-primary">
                   {moment(startdate).format('LL')} TO{' '}
                   {moment(enddate).format('LL')}
@@ -230,7 +279,7 @@ const ManageDailySales = () => {
                   {totalAmount && FormatCurrency(totalAmount)}
                 </span>
               </h5>
-              <hr />
+              {/* <pre>{JSON.stringify(sales[0].saler.name, null, 2)}</pre> */}
               <table width="100%" className="mb-10 table table-striped">
                 <thead>
                   <tr className="bg-gray-100 p-1">
@@ -284,6 +333,6 @@ const ManageDailySales = () => {
       </AdminRoute>
     </Layout>
   );
-};
+}
 
-export default ManageDailySales;
+export default ManageUserDailySales;
