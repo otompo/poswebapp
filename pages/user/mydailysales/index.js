@@ -115,8 +115,8 @@ const Index = () => {
               {sale.products.map((product) => (
                 <span key={product._id}>
                   <h6 style={{ color: '#e74c3c' }}>{product.name}</h6>
-                  <h6 className="d-inline pl-4">Price:</h6> GH&#x20B5;
-                  {product.sellingPrice.toFixed(2)}{' '}
+                  <h6 className="d-inline pl-4">Price:</h6>
+                  {FormatCurrency(product.sellingPrice * product.count)}{' '}
                   <h6 className="d-inline pl-2">Quantity:</h6> {product.count}
                   <br />
                 </span>
@@ -199,6 +199,7 @@ const Index = () => {
           </div> */}
         </div>
         <hr />
+        {/* <pre>{JSON.stringify(sales, null, 2)}</pre> */}
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-12">
