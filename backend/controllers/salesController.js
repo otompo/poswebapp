@@ -12,15 +12,13 @@ export const createSales = catchAsync(async (req, res, next) => {
     paidAmount,
     cart,
     subTotal,
-    totalTax,
   } = req.body;
   let balanceTotal = (Number(paidAmount) - Number(grandTotal)).toFixed(2);
-  // let grandTotal = subTotal + totalTax;
+
   const newSales = new Sales({
     saler: req.user._id,
     quantitySold,
     subTotal,
-    totalTax,
     grandTotal,
     paymentMethod,
     products: cart,

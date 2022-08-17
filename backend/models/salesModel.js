@@ -17,10 +17,6 @@ const salesSchema = mongoose.Schema(
       type: Number,
       require: true,
     },
-    totalTax: {
-      type: Number,
-      require: true,
-    },
     grandTotal: {
       type: Number,
       require: true,
