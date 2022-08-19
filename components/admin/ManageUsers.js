@@ -3,8 +3,9 @@ import { MDBDataTable } from 'mdbreact';
 import { Tooltip, Modal, Badge, Button } from 'antd';
 import {
   DeleteOutlined,
-  CoffeeOutlined,
+  CloseCircleOutlined,
   SyncOutlined,
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import Layout from '../layout/Layout';
 import moment from 'moment';
@@ -209,8 +210,8 @@ const ManageUsers = () => {
                           removeUserAsAdmin(e, user && user.username)
                         }
                       >
-                        <CoffeeOutlined
-                          className="text-danger d-flex justify-content-center "
+                        <CheckCircleOutlined
+                          className="text-success d-flex justify-content-center "
                           style={{ cursor: 'pointer', fontSize: 25 }}
                         />
                       </span>
@@ -223,8 +224,8 @@ const ManageUsers = () => {
                         }
                         // className="pt-1 pl-3"
                       >
-                        <CoffeeOutlined
-                          className="text-success d-flex justify-content-center "
+                        <CloseCircleOutlined
+                          className="text-danger d-flex justify-content-center "
                           style={{ cursor: 'pointer', fontSize: 25 }}
                         />
                       </span>
