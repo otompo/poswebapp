@@ -112,7 +112,7 @@ const ManageDailySales = () => {
                 <span key={product._id}>
                   <h6 style={{ color: '#e74c3c' }}>{product.name}</h6>
                   <h6 className="d-inline pl-4">Selling Price:</h6> GH&#x20B5;
-                  {FormatCurrency(product.sellingPrice)}
+                  {FormatCurrency(Number(product.sellingPrice))}
                   <h6 className="d-inline pl-2">Quantity:</h6> {product.count}
                   <br />
                 </span>
@@ -120,8 +120,8 @@ const ManageDailySales = () => {
             </span>
           ),
           quantity: `${sale.quantitySold}`,
-          subtotal: `${FormatCurrency(sale.subTotal)}`,
-          grandtotal: `${FormatCurrency(sale.grandTotal)}`,
+          subtotal: `${FormatCurrency(Number(sale.subTotal))}`,
+          grandtotal: `${FormatCurrency(Number(sale.grandTotal))}`,
         });
       });
 
@@ -178,7 +178,7 @@ const ManageDailySales = () => {
               <div className="col-md-6">
                 <h6 className="d-inline text-uppercase">AMOUNT</h6>{' '}
                 <Avatar size={100} style={{ backgroundColor: '#87d068' }}>
-                  {totalAmount && FormatCurrency(totalAmount)}
+                  {totalAmount && FormatCurrency(Number(totalAmount))}
                 </Avatar>
               </div>
               <div className="col-md-6">
@@ -227,7 +227,7 @@ const ManageDailySales = () => {
               <h5 className="text-uppercase">
                 TOTAL AMOUNT OF SALES:{' '}
                 <span className="text-primary">
-                  {totalAmount && FormatCurrency(totalAmount)}
+                  {totalAmount && FormatCurrency(Number(totalAmount))}
                 </span>
               </h5>
               <hr />
@@ -255,7 +255,7 @@ const ManageDailySales = () => {
                             <td>
                               {' '}
                               {FormatCurrency(
-                                product.sellingPrice * product.count,
+                                Number(product.sellingPrice * product.count),
                               )}
                             </td>
                           </tr>
