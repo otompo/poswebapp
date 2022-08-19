@@ -38,7 +38,8 @@ export const createProduct = catchAsync(async (req, res, next) => {
 
 // get all works
 export const getAllProducts = catchAsync(async (req, res) => {
-  const products = await Product.find({})
+  const products = await Product.find({ active: true })
+    .select('+active')
     .sort({ createdAt: -1 })
     .populate('category', '_id name slug')
     .populate('user', '_id name');
@@ -62,7 +63,8 @@ export const getProductsInstock = catchAsync(async (req, res, next) => {
     $expr: { $gt: [{ $toDouble: '$quantity' }, 30] },
   })
     .populate('category', '_id name slug')
-    .populate('user', '_id name');
+    .populate('user', '_id name')
+    .sort({ createdAt: -1 });
 
   res.send({
     total: products.length,
@@ -76,7 +78,8 @@ export const getProductsOutOfStock = catchAsync(async (req, res, next) => {
     $expr: { $lte: [{ $toDouble: '$quantity' }, 30] },
   })
     .populate('category', '_id name slug')
-    .populate('user', '_id name');
+    .populate('user', '_id name')
+    .sort({ createdAt: -1 });
   res.send({ total: products.length, products });
 });
 
@@ -90,7 +93,8 @@ export const getProductAboutToOutofStock = catchAsync(
       ],
     })
       .populate('category', '_id name slug')
-      .populate('user', '_id name');
+      .populate('user', '_id name')
+      .sort({ createdAt: -1 });
     res.send({ total: products.length, products });
   },
 );
@@ -98,8 +102,10 @@ export const getProductAboutToOutofStock = catchAsync(
 // getExpired
 export const getExpiredProduct = catchAsync(async (req, res, next) => {
   const products = await Product.find({ expireDate: { $lte: new Date() } })
+    .select('+active')
     .populate('category', '_id name slug')
-    .populate('user', '_id name');
+    .populate('user', '_id name')
+    .sort({ createdAt: -1 });
   res.send({ total: products.length, products });
 });
 
@@ -112,8 +118,10 @@ export const getProductsAboutToExpire = catchAsync(async (req, res, next) => {
   const products = await Product.find({
     expireDate: { $lte: new Date(date10), $gte: new Date() },
   })
+    .select('+active')
     .populate('category', '_id name slug')
-    .populate('user', '_id name');
+    .populate('user', '_id name')
+    .sort({ createdAt: -1 });
   res.send({ total: products.length, products });
 });
 
@@ -200,4 +208,37 @@ export const exportProductData = catchAsync(async (req, res, next) => {
 export const importProductData = catchAsync(async (req, res, next) => {
   const data = Product.insertMany(req.body.csvFile);
   res.send(data);
+});
+
+export const makeProductInActive = catchAsync(async (req, res, next) => {
+  const { slug } = req.query;
+  const product = await Product.findOne({ slug });
+  if (!product) {
+    return next(new AppError('User not found', 404));
+  }
+  const updatedProduct = await Product.findOneAndUpdate(
+    { slug: product.slug },
+    {
+      active: false,
+      quantity: 0,
+    },
+    { new: true },
+  );
+  res.send({ ok: true });
+});
+
+export const makeProductActive = catchAsync(async (req, res, next) => {
+  const { slug } = req.query;
+  const product = await Product.findOne({ slug });
+  if (!product) {
+    return next(new AppError('User not found', 404));
+  }
+  const updatedProduct = await Product.findOneAndUpdate(
+    { slug: product.slug },
+    {
+      active: true,
+    },
+    { new: true },
+  );
+  res.send({ ok: true });
 });

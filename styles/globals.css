@@ -292,6 +292,13 @@ a {
   right: 70px;
   margin-top: 2px;
 }
+.cart-items .formcount{
+  border:1px solid #000;
+  padding: 6px;
+  border-radius:5px;
+  color: #000;
+
+}
 /* ****************************Import Styling********************************* */
 
 @import url('./Footer.css');

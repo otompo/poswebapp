@@ -7,8 +7,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { MDBDataTable } from 'mdbreact';
 import moment from 'moment';
 import axios from 'axios';
-import { Button, Modal, Spin, Avatar } from 'antd';
-import { PrinterOutlined } from '@ant-design/icons';
+import { Button, Modal, Spin } from 'antd';
+import { PrinterOutlined, DeleteOutlined } from '@ant-design/icons';
 import { toast } from 'react-hot-toast';
 import Loader from '../layout/Loader';
 import ReactToPrint from 'react-to-print';
@@ -163,13 +163,30 @@ function ManageReports(props) {
   const getAllReports = async () => {
     try {
       setLoading(true);
-
       const { data } = await axios.get(`/api/admin/reports`);
       setReports(data);
       setLoading(false);
     } catch (err) {
       console.log(err);
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (reportId) => {
+    try {
+      // setSuccess(true);
+      const { data } = axios.delete(`/api/admin/reports/delete/${reportId}`);
+      setReports((reports) => {
+        const index = reports.findIndex((l) => l._id === reportId);
+        reports.splice(index, 1);
+        return [...reports];
+      });
+      toast.success('success');
+      // setSuccess(false);
+    } catch (err) {
+      console.log(err);
+      // setSuccess(false);
+      // toast.error('failed');
     }
   };
 
@@ -240,14 +257,32 @@ function ManageReports(props) {
           profit: `${FormatCurrency(report.profit)}`,
 
           action: (
-            <>
-              <button
-                className="btn btn-danger mx-2"
-                onClick={() => showPrintData(report)}
-              >
-                <PrinterOutlined style={{ fontSize: 25 }} />
-              </button>
-            </>
+            <div className="container">
+              <div className="row">
+                <div className="col-md-6">
+                  <button
+                    className="btn btn-info mx-2"
+                    onClick={() => showPrintData(report)}
+                  >
+                    <PrinterOutlined style={{ fontSize: 25 }} />
+                  </button>
+                </div>
+                <div className="col-md-6">
+                  <button
+                    onClick={() => handleDelete(report._id)}
+                    className="btn btn-danger"
+                  >
+                    <DeleteOutlined
+                      className="text-white d-flex justify-content-center"
+                      style={{
+                        cursor: 'pointer',
+                        fontSize: 25,
+                      }}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
           ),
         });
       });

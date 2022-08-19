@@ -422,10 +422,10 @@ function ManageProductsForSale(props) {
 
               <div className="container">
                 <div className="row">
-                  <div className="col-md-7">
+                  <div className="col-md-12">
                     <ul>
                       <li>
-                        <h2>{name}</h2>
+                        <h2 className="text-uppercase text-bold">{name}</h2>
                       </li>
                       <li>
                         <h6 className="d-inline">Email:</h6> {email}
@@ -445,21 +445,24 @@ function ManageProductsForSale(props) {
                 {sales.map((item, i) => (
                   <ul key={i}>
                     <li className="p-1 ">
-                      <h6 className="d-inline">Receipt number:</h6> {item._id}
+                      <h6 className="d-inline">Receipt Number:</h6>{' '}
+                      <span className="text-uppercase text-bold">
+                        {' '}
+                        {item.invoiceID}
+                      </span>
                     </li>
-
                     <li className="p-1 bg-gray-100">
-                      <h6 className="d-inline">Receipt date:</h6>{' '}
+                      <h6 className="d-inline">Receipt Date:</h6>{' '}
                       {moment(item.createdAt).format('LL')}
                     </li>
-                    <li className="p-1 bg-gray-100">
+                    {/* <li className="p-1 bg-gray-100">
                       <h6 className="d-inline">Receipt issued by:</h6>{' '}
                       {item.saler.name}
-                    </li>
+                    </li> */}
                   </ul>
                 ))}
               </article>
-              {/* <pre>{JSON.stringify(sales, null, 4)}</pre> */}
+
               <hr />
               <table width="100%" className="mb-10 table table-striped">
                 <thead>
@@ -494,7 +497,7 @@ function ManageProductsForSale(props) {
                     <div className="container" key={item._id}>
                       <div className="row">
                         {/* <div className="col-md-6">Yaw</div> */}
-                        <div className="col-md-6 ml-5">
+                        <div className="col-md-8 ">
                           <h6 className="d-inline pl-4"> TOTAL QUANTITY:</h6>{' '}
                           {item.quantitySold}
                           <br />

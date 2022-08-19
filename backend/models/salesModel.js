@@ -10,8 +10,8 @@ const salesSchema = mongoose.Schema(
     },
     dateTime: {
       type: Date,
-      default: Date.now,
       require: true,
+      default: Date.now,
     },
     subTotal: {
       type: Number,
@@ -38,6 +38,11 @@ const salesSchema = mongoose.Schema(
     quantitySold: {
       type: Number,
       require: true,
+    },
+    invoiceID: {
+      type: String,
+      unique: true,
+      index: true,
     },
     saler: {
       type: mongoose.Schema.Types.ObjectId,

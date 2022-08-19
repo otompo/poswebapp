@@ -1,6 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
+
+import {
+  PrinterOutlined,
+  CheckOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons';
 import { Modal, Avatar } from 'antd';
-import { PrinterOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import AdminRoute from '../routes/AdminRoutes';
 import { MDBDataTable } from 'mdbreact';
 import Layout from '../layout/Layout';
@@ -14,9 +19,10 @@ import FormatCurrency from '../FormatCurrency';
 const { confirm } = Modal;
 
 const ManageProductsExpired = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const showPrintData = () => {
     return showModal();
@@ -36,13 +42,9 @@ const ManageProductsExpired = () => {
 
   const componentRef = useRef();
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   useEffect(() => {
     loadProductsExpired();
-  }, []);
+  }, [success]);
 
   const loadProductsExpired = async () => {
     try {
@@ -56,40 +58,32 @@ const ManageProductsExpired = () => {
     }
   };
 
-  const handleDelete = (index) => {
-    confirm({
-      title: `Are you sure delete`,
-      icon: <ExclamationCircleOutlined />,
-      content: 'It will be deleted permanentily if you click Yes',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+  const handleMakeProductInactive = async (e, slug) => {
+    e.preventDefault();
+    try {
+      setSuccess(true);
+      const { data } = await axios.patch(
+        `/api/admin/products/available/${slug}`,
+      );
+      toast.success('Success');
+      setSuccess(false);
+    } catch (err) {
+      toast.error(err.response.data.message);
+      setSuccess(false);
+    }
+  };
 
-      onOk: async () => {
-        try {
-          //   const answer = window.confirm('Are you sure you want to delete?');
-          //   if (!answer) return;
-          setLoading(true);
-          let allProducts = products;
-          const removed = allProducts.splice(index, 1);
-          // console.log('removed', removed[0]._id);
-          setProducts(allProducts);
-          // send request to server
-          const { data } = await axios.delete(
-            `/api/admin/products/${removed[0]._id}`,
-          );
-          // console.log('LESSON DELETED =>', data);
-          toast.success('Product Deleted Successfully');
-          setLoading(false);
-        } catch (err) {
-          toast.error(err.response.data.message);
-          setLoading(false);
-        }
-      },
-      onCancel() {
-        return;
-      },
-    });
+  const handleMakeProductActive = async (e, slug) => {
+    e.preventDefault();
+    setSuccess(true);
+    try {
+      const { data } = await axios.put(`/api/admin/products/available/${slug}`);
+      toast.success('Success');
+      setSuccess(false);
+    } catch (err) {
+      toast.error(err.response.data.message);
+      setSuccess(false);
+    }
   };
 
   const setData = () => {
@@ -127,8 +121,8 @@ const ManageProductsExpired = () => {
         },
 
         {
-          label: 'Created At',
-          field: 'createdat',
+          label: 'Action',
+          field: 'action',
           sort: 'asc',
         },
       ],
@@ -148,24 +142,35 @@ const ManageProductsExpired = () => {
           costPrice: `${FormatCurrency(product.costPrice)}`,
           sellingPrice: `${FormatCurrency(product.sellingPrice)}`,
           expireDate: `${moment(product.expireDate).fromNow()}`,
-          createdat: `${moment(product.createdAt).fromNow()}`,
-
-          // action: (
-          //   <>
-          //     <div className="container">
-          //       <div className="row">
-          //         <div className="col-md-8 offset-md-2">
-          //           <span onClick={() => handleDelete(index)}>
-          //             <DeleteOutlined
-          //               className="text-danger d-flex justify-content-center"
-          //               style={{ cursor: 'pointer', fontSize: 30 }}
-          //             />
-          //           </span>
-          //         </div>
-          //       </div>
-          //     </div>
-          //   </>
-          // ),
+          action: (
+            <>
+              <div className="row">
+                <div className="col-md-6">
+                  {product && product.active ? (
+                    <span
+                      onClick={(e) => handleMakeProductActive(e, product.slug)}
+                    >
+                      <CheckOutlined
+                        className="text-success d-flex justify-content-center "
+                        style={{ cursor: 'pointer', fontSize: 25 }}
+                      />
+                    </span>
+                  ) : (
+                    <span
+                      onClick={(e) =>
+                        handleMakeProductInactive(e, product.slug)
+                      }
+                    >
+                      <CloseCircleOutlined
+                        className="text-danger d-flex justify-content-center "
+                        style={{ cursor: 'pointer', fontSize: 25 }}
+                      />
+                    </span>
+                  )}
+                </div>
+              </div>
+            </>
+          ),
         });
       });
 
@@ -185,17 +190,17 @@ const ManageProductsExpired = () => {
           </div>
         </div>
         <hr />
-        {loading ? (
+        {/* {loading ? (
           <Loader />
-        ) : (
-          <MDBDataTable
-            data={setData()}
-            className="px-3"
-            bordered
-            striped
-            hover
-          />
-        )}
+        ) : ( */}
+        <MDBDataTable
+          data={setData()}
+          className="px-3"
+          bordered
+          striped
+          hover
+        />
+        {/* )} */}
         <Modal
           title="EXPIRED PRODUCTS"
           visible={isModalVisible}
@@ -207,11 +212,12 @@ const ManageProductsExpired = () => {
           <div className="invoice__preview bg-white  rounded">
             <div ref={componentRef} className="p-5" id="invoice__preview">
               <h5>LIST OF EXPIRED PRODUCTS</h5>
-              <hr />
+
               <table width="100%" className="mb-10 table table-striped">
                 <thead>
                   <tr className="bg-gray-100 p-1">
                     <td className="font-bold">Name</td>
+                    <td className="font-bold">Quantity</td>
                     <td className="font-bold">Expired Date</td>
                     <td className="font-bold">Category</td>
                   </tr>
@@ -220,6 +226,7 @@ const ManageProductsExpired = () => {
                   <tbody key={product._id}>
                     <tr className="h-10">
                       <td>{product.name}</td>
+                      <td>{product.quantity}</td>
                       <td>{moment(product.expireDate).fromNow()}</td>
                       <td>
                         {product.category &&

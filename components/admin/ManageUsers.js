@@ -258,7 +258,7 @@ const ManageUsers = () => {
         <div className="container m-2">
           <div className="row my-4">
             <div className="col-md-3">
-              <h1 className="lead">Manage Staff</h1>
+              <h1 className="lead text-uppercase">Manage Staff</h1>
             </div>
             <div className="col-md-3">
               <Tooltip title="View Users in Trash">

@@ -54,3 +54,13 @@ export const getAllReports = catchAsync(async (req, res, next) => {
   const data = await Report.find().sort({ createdAt: -1 });
   res.send(data);
 });
+
+// delete
+export const deleteReport = catchAsync(async (req, res, next) => {
+  const report = await Report.findById(req.query.reportId);
+  const data = await Report.findByIdAndRemove(report._id);
+  if (!data) {
+    return next(new AppError('Report not found', 404));
+  }
+  res.status(200).send({ status: 'Success' });
+});

@@ -1,6 +1,7 @@
 import Sales from '../models/salesModel';
 import Product from '../models/productModel';
 import catchAsync from '../utils/catchAsync';
+import { nanoid } from 'nanoid';
 
 export const createSales = catchAsync(async (req, res, next) => {
   // console.log(req.body);
@@ -14,7 +15,7 @@ export const createSales = catchAsync(async (req, res, next) => {
     subTotal,
   } = req.body;
   let balanceTotal = (Number(paidAmount) - Number(grandTotal)).toFixed(2);
-
+  let invoiceID = nanoid(10).toLowerCase();
   const newSales = new Sales({
     saler: req.user._id,
     quantitySold,
@@ -23,6 +24,7 @@ export const createSales = catchAsync(async (req, res, next) => {
     paymentMethod,
     products: cart,
     balance: balanceTotal,
+    invoiceID: invoiceID,
   });
 
   cart.filter((item) => {

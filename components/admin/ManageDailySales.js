@@ -244,7 +244,7 @@ const ManageDailySales = () => {
                   sales.map((sale, i) => (
                     <>
                       {sale.products.map((product) => (
-                        <tbody>
+                        <tbody key={product._id}>
                           <tr>
                             <td>{product.name}</td>
                             <td>

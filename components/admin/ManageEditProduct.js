@@ -187,6 +187,7 @@ const ManageEditProduct = () => {
                     className="form-control mb-4 p-2"
                     placeholder="Enter quantity"
                     required
+                    readOnly
                   />
                 </div>
                 <div className="form-group">
@@ -231,55 +232,6 @@ const ManageEditProduct = () => {
                     placeholderText="I have been cleared!"
                   />
                 </div>
-
-                {/* 
-               
-
-                <div className="row">
-                  <div className="col-md-8">
-                    <div className="form-group">
-                      <label className="btn btn-dark btn-block text-left mt-3 text-center">
-                        {loading ? (
-                          <span className="spinLoader">
-                            <Spin />
-                          </span>
-                        ) : (
-                          `${uploadButtonText}`
-                        )}
-
-                        <input
-                          type="file"
-                          name="image"
-                          size="large"
-                          onChange={handleImage}
-                          accept="image/*"
-                          hidden
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-md-2 my-3">
-                    <div className="form-group">
-                      {imagePreview ? (
-                        <Avatar size={35} src={imagePreview} />
-                      ) : (
-                        <Avatar
-                          size={50}
-                          src={<Image src={values.imagePath} size={50} />}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="form-group">
-                  {progress > 0 && (
-                    <Progress
-                      className="d-flex justify-content-center pt-2"
-                      percent={progress}
-                      steps={10}
-                    />
-                  )}
-                </div> */}
 
                 <div className="d-grid gap-2 my-2 ">
                   <button

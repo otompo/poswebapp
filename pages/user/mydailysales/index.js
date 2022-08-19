@@ -147,7 +147,7 @@ const Index = () => {
     <Layout>
       <UserRoute>
         <div className="row my-3">
-          <h1 className="lead">MY Daily Sales</h1>
+          <h1 className="lead">My Daily Sales</h1>
         </div>
         <hr />
         <div className="row my-2">
@@ -239,7 +239,7 @@ const Index = () => {
                   <div className="col-md-12">
                     <ul>
                       <li>
-                        <h2>{name}</h2>
+                        <h2 className="text-uppercase text-bold">{name}</h2>
                       </li>
                       <li>
                         <h6 className="d-inline">Email:</h6> {email}
@@ -260,21 +260,24 @@ const Index = () => {
                 {tempData.map((temp) => (
                   <ul key={temp._id}>
                     <li className="p-1 ">
-                      <h6 className="d-inline">Receipt number:</h6> {temp._id}
+                      <h6 className="d-inline">Receipt Number:</h6>{' '}
+                      <span className="text-uppercase text-bold">
+                        {' '}
+                        {temp.invoiceID}
+                      </span>
                     </li>
-
                     <li className="p-1 bg-gray-100">
-                      <h6 className="d-inline">Receipt date:</h6>{' '}
+                      <h6 className="d-inline">Receipt Date:</h6>{' '}
                       {moment(temp.createdAt).format('LL')}
                     </li>
-                    <li className="p-1 bg-gray-100">
+                    {/* <li className="p-1 bg-gray-100">
                       <h6 className="d-inline">Receipt issued by:</h6>{' '}
                       {temp.saler.name}
-                    </li>
+                    </li> */}
                   </ul>
                 ))}
               </article>
-              <hr />
+
               <table width="100%" className="mb-10 table table-striped">
                 <thead>
                   <tr className="bg-gray-100 p-1">
@@ -307,20 +310,14 @@ const Index = () => {
                   <>
                     <div className="container" key={temp._id}>
                       <div className="row">
-                        <div className="col-md-6 ml-5">
-                          <h6 className="d-inline pl-4"> TOTAL QUANTITY:</h6>{' '}
+                        <div className="col-md-8 ">
+                          <h6 className="d-inline"> TOTAL QUANTITY:</h6>{' '}
                           {temp.quantitySold}
-                          {/* <br />
-                          <h6 className="d-inline pl-4"> SUB TOTAL:</h6>{' '}
-                          GH&#x20B5; {temp.subTotal}.00 */}
                           <br />
-                          <h6 className="d-inline pl-4"> GRAND TOTAL:</h6>{' '}
+                          <h6 className="d-inline"> GRAND TOTAL:</h6>{' '}
                           {FormatCurrency(temp.grandTotal)}
                           <br />
-                          <h6 className="d-inline pl-4">
-                            {' '}
-                            PAYMENT METHOD:
-                          </h6>{' '}
+                          <h6 className="d-inline"> PAYMENT METHOD:</h6>
                           {temp.paymentMethod}
                         </div>
                       </div>

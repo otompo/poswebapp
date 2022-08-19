@@ -20,7 +20,7 @@ import moment from 'moment';
 
 const { confirm } = Modal;
 
-function ManageProductsAboutOutOfStock(props) {
+function ManagePurchaseProducts(props) {
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
   const [products, setProducts] = useState([]);
@@ -63,7 +63,7 @@ function ManageProductsAboutOutOfStock(props) {
   }, [cart]);
 
   useEffect(() => {
-    loadProductsAboutOutOfStock();
+    showProducts();
     showPurchaseProducts();
   }, [success]);
 
@@ -81,14 +81,14 @@ function ManageProductsAboutOutOfStock(props) {
     }
   };
 
-  const loadProductsAboutOutOfStock = async () => {
+  const showProducts = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/admin/products/aboutoutstock`);
+      const { data } = await axios.get(`/api/products`);
       setProducts(data.products);
       setLoading(false);
     } catch (err) {
-      console.log(err);
+      console.log(err.response);
       setLoading(false);
     }
   };
@@ -168,14 +168,12 @@ function ManageProductsAboutOutOfStock(props) {
   };
 
   return (
-    <Layout title="Products About To Go OutOf Stock">
+    <Layout title="Purchase Products">
       <AdminRouter>
-        <div className="container-fluid">
+        <div className="container">
           <div className="row my-3">
             <div className="col-md-5">
-              <h1 className="lead text-uppercase">
-                Products About To Go OutOf Stock
-              </h1>
+              <h1 className="lead text-uppercase">Purchase Products</h1>
             </div>
             <div className="col-md-2">
               <Badge count={cart && cart.length ? cart.length : 0} showZero>
@@ -197,14 +195,6 @@ function ManageProductsAboutOutOfStock(props) {
             </div>
 
             <div className="col-md-2">
-              {/* <button
-                className="btn btn-dark mx-5"
-                onClick={handleSubmit}
-                disabled={cart.length === 0}
-              >
-                
-                {loading ? <Spin /> : 'Submit'}
-              </button> */}
               <button
                 className="btn btn-danger mx-2"
                 onClick={() => {
@@ -376,4 +366,4 @@ function ManageProductsAboutOutOfStock(props) {
   );
 }
 
-export default ManageProductsAboutOutOfStock;
+export default ManagePurchaseProducts;

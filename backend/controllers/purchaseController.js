@@ -81,3 +81,10 @@ export const getProductsPurchaseByDate = catchAsync(async (req, res, next) => {
     },
   ).sort({ purchaseTime: -1 });
 });
+
+export const getPurchaseProductsLimit = catchAsync(async (req, res, next) => {
+  const purchase = await Purchase.find({ saler: req.user._id }).limit(1).sort({
+    purchaseTime: -1,
+  });
+  res.send(purchase);
+});

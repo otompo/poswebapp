@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBDataTable } from 'mdbreact';
-import { Avatar, Spin, Modal, Progress, Badge, Button, Tooltip } from 'antd';
+import { Avatar, Spin, Modal, Select, Button, Tooltip } from 'antd';
 import download from 'downloadjs';
 import Link from 'next/link';
 import {
@@ -20,6 +20,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import FormatCurrency from '../FormatCurrency';
 const { confirm } = Modal;
+const { Option } = Select;
 
 const ManageProducts = () => {
   const [values, setValues] = useState({
@@ -34,12 +35,11 @@ const ManageProducts = () => {
   const [ok, setOk] = useState(false);
   const [expireDate, setExpireDate] = useState(new Date());
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [categories, setCategories] = useState([]);
+  const [loadedCategories, setLoadedCategories] = useState([]);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState([]); // categories
   const [csvFile, setCsvFile] = useState([]);
-  const [file, setFile] = useState('');
   const [totalInStock, setTotalInStock] = useState('');
   const [totalAboutOutStock, setTotalAboutOutStock] = useState('');
   const [totalOutOfStock, setTotalOutOfStock] = useState('');
@@ -48,9 +48,8 @@ const ManageProducts = () => {
   const [tempData, setTempData] = useState([]);
   const [actionTriggered, setActionTriggered] = useState('');
   const [quantity, setQuantity] = useState('');
+  const [file, setFile] = useState('');
   let currentQty = tempData[1];
-
-  // console.log('file', file.name);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -128,7 +127,7 @@ const ManageProducts = () => {
   const loadCategories = async () => {
     try {
       const { data } = await axios.get(`/api/admin/category`);
-      setCategories(data.category);
+      setLoadedCategories(data.category);
     } catch (err) {
       console.log(err);
     }
@@ -157,7 +156,6 @@ const ManageProducts = () => {
         ...values,
         selectedCategory,
         expireDate,
-        // sellingPrice,
       });
       toast.success('Success');
       setValues({
@@ -407,7 +405,7 @@ const ManageProducts = () => {
               <div className="container">
                 <div className="row">
                   <Tooltip title={`Edit ${product.name}`} color="green">
-                    <div className="col-md-4">
+                    <div className="col-md-6">
                       <Link href={`/admin/products/${product.slug}`}>
                         <a>
                           <EditOutlined
@@ -418,7 +416,7 @@ const ManageProducts = () => {
                       </Link>
                     </div>
                   </Tooltip>
-                  <div className="col-md-4">
+                  {/* <div className="col-md-4">
                     <Tooltip title={`Restock ${product.name}`} color="blue">
                       <span
                         onClick={() => {
@@ -437,8 +435,8 @@ const ManageProducts = () => {
                         />
                       </span>
                     </Tooltip>
-                  </div>
-                  <div className="col-md-4">
+                  </div> */}
+                  <div className="col-md-6">
                     <Tooltip title={`Delete ${product.name}`} color="red">
                       <span
                         onClick={() => handleDelete(index)}
@@ -658,7 +656,6 @@ const ManageProducts = () => {
                       required
                     />
                   </div>
-
                   <div className="form-group">
                     <label for="expireDate">Expire Date</label>
                     <DatePicker
@@ -672,10 +669,9 @@ const ManageProducts = () => {
                       placeholderText="I have been cleared!"
                     />
                   </div>
-
                   <div className="d-grid gap-2 my-2 ">
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary btn-block"
                       disabled={
                         !values.name ||
                         !values.costPrice ||
@@ -691,11 +687,22 @@ const ManageProducts = () => {
                 </form>
               </div>
               <div className="col-md-6">
-                <h1 className="lead  ml-5">Categories</h1>
+                <h1 className="lead  ml-2">Categories</h1>
                 <hr />
                 <div className="row">
                   <div className="col-md-12">
-                    <ul>{showCategories()}</ul>
+                    {/* <ul>{showCategories()}</ul> */}
+                    <Select
+                      allowClear={true}
+                      placeholder="Select Category"
+                      style={{ width: '100%' }}
+                      onChange={(v) => setSelectedCategory(v)}
+                    >
+                      {loadedCategories &&
+                        loadedCategories.map((item) => (
+                          <Option key={item._id}>{item.name}</Option>
+                        ))}
+                    </Select>
                   </div>
                 </div>
               </div>
