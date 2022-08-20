@@ -206,7 +206,7 @@ function ManageProductsAboutOutOfStock(props) {
                 {loading ? <Spin /> : 'Submit'}
               </button> */}
               <button
-                className="btn btn-danger mx-2"
+                className="btn btn-info mx-2"
                 onClick={() => {
                   setIsModalVisible(true);
                 }}

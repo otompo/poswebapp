@@ -149,7 +149,7 @@ function ManageUserDailySales(props) {
             <h1 className="lead">Manage Manage Daily Sales</h1>
           </div>
           <div className="col-md-2">
-            <button className="btn btn-danger mx-2" onClick={showPrintData}>
+            <button className="btn btn-info mx-2" onClick={showPrintData}>
               <PrinterOutlined style={{ fontSize: 25 }} />
             </button>
           </div>

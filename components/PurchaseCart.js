@@ -11,7 +11,7 @@ import { toast } from 'react-hot-toast';
 function PurchaseCart({ item, dispatch, cart }) {
   const [count, setCount] = useState('');
   const [countConfirm, setCountConfirm] = useState(false);
-  // console.log('countConfirm', countConfirm);
+
   const handleConfirm = () => {
     setCountConfirm(true);
     toast.success('Confirm');

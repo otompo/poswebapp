@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Spin } from 'antd';
 import React, { useRef, useEffect, useState } from 'react';
 import AdminRoute from '../../components/routes/AdminRoutes';
 import Layout from '../../components/layout/Layout';
@@ -16,6 +16,8 @@ import useSettings from '../../hooks/useSettings';
 import renderHTML from 'react-render-html';
 import moment from 'moment';
 import ReactToPrint from 'react-to-print';
+import { toast } from 'react-hot-toast';
+
 const { confirm } = Modal;
 
 function ManageAllPurchaseProducts(props) {
@@ -23,9 +25,19 @@ function ManageAllPurchaseProducts(props) {
   const [startdate, enddate] = dateRange;
   const [productsPurchase, setProductsPurchase] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [ok, setOk] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [tempData, setTempData] = useState([]);
   const [actionTriggered, setActionTriggered] = useState('');
+  const [currentProduct, setCurrentProduct] = useState([]);
+  const [currentInvoiceID, setCurrentInvoiceID] = useState('');
+  const [quantity, setQuantity] = useState(null);
+
+  const [inEditMode, setInEditMode] = useState({
+    status: false,
+    rowKey: null,
+  });
 
   const {
     name,
@@ -37,7 +49,31 @@ function ManageAllPurchaseProducts(props) {
     description,
   } = useSettings();
 
+  /**
+   *
+   * @param id - The id of the product
+   * @param addedQuantity - The current unit price of the product
+   */
+  const onEdit = ({ id, addedQuantity }) => {
+    setInEditMode({
+      status: true,
+      rowKey: id,
+    });
+    setQuantity(addedQuantity);
+  };
+
+  const onCancel = () => {
+    // reset the inEditMode state value
+    setInEditMode({
+      status: false,
+      rowKey: null,
+    });
+    // reset the unit price state value
+    setQuantity(null);
+  };
+
   const showPrintData = (purchase) => {
+    setCurrentInvoiceID(purchase.invoiceID);
     let tempData = [purchase];
     setTempData((item) => [...tempData]);
     return showModal();
@@ -54,15 +90,54 @@ function ManageAllPurchaseProducts(props) {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
   const componentRef = useRef();
 
   useEffect(() => {
     handlePurcahaseSubmit();
-  }, []);
+  }, [success]);
+
+  /**
+   *
+   * @param id
+   * @param newQuantity
+   */
+  const handleUpdateQuantity = async ({
+    slug,
+    newQuantity,
+    previousQuantity,
+    purchaseId,
+  }) => {
+    try {
+      setOk(true);
+      setSuccess(true);
+      const { data } = await axios.put(
+        `/api/admin/products/purchase/update/${slug}`,
+        {
+          purchaseId,
+          previousQuantity,
+          newQuantity,
+          currentInvoiceID,
+        },
+      );
+      toast.success('success');
+      setOk(false);
+      setSuccess(false);
+    } catch (error) {
+      console.log(error);
+      setOk(false);
+      setSuccess(false);
+    }
+  };
+
+  /**
+   * ***********************************************
+   */
 
   const handlePurcahaseSubmit = async () => {
     try {
       setLoading(true);
+
       const { data } = await axios.get(
         `/api/admin/products/purchase/productspurchasebydate?startdate=${moment(
           startdate,
@@ -73,6 +148,30 @@ function ManageAllPurchaseProducts(props) {
     } catch (err) {
       console.log(err);
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (purchaseId) => {
+    try {
+      setSuccess(true);
+      const { data } = axios.delete(
+        `/api/admin/products/purchase/delete/${purchaseId}`,
+      );
+      setTempData((temp) => {
+        const index = temp.findIndex((l) => l._id === purchaseId);
+        temp.splice(index, 1);
+        return [...temp];
+      });
+      // setTempData((temp) => {
+      //   const index = temp.findIndex((l) => l._id === purchaseId);
+      //   temp.splice(index, 1);
+      //   return [...temp];
+      // });
+      toast.success('success');
+      setSuccess(false);
+    } catch (err) {
+      console.log(err);
+      setSuccess(false);
     }
   };
 
@@ -131,26 +230,33 @@ function ManageAllPurchaseProducts(props) {
           action: (
             <div className="container-fluid">
               <div className="row">
-                <div className="col-md-4">
+                <div className="col-md-6">
                   <button
                     className="btn btn-info mx-2"
-                    onClick={() => showPrintData(purchase)}
+                    onClick={() => {
+                      setActionTriggered('ACTION_2');
+                      showPrintData(purchase);
+                    }}
                   >
                     <PrinterOutlined style={{ fontSize: 25 }} />
                   </button>
                 </div>
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <button
                     className="btn btn-danger mx-2"
-                    onClick={() => showPrintData(purchase)}
+                    onClick={() => handleDelete(purchase._id)}
                   >
                     <DeleteOutlined style={{ fontSize: 25 }} />
                   </button>
-                </div>
-                <div className="col-md-4">
+                </div> */}
+                <div className="col-md-6">
                   <button
                     className="btn btn-success mx-2"
-                    onClick={() => showPrintData(purchase)}
+                    onClick={() => {
+                      setActionTriggered('ACTION_3');
+                      showPrintData(purchase);
+                      setCurrentProduct(purchase.products);
+                    }}
                   >
                     <EditOutlined style={{ fontSize: 25 }} />
                   </button>
@@ -165,11 +271,11 @@ function ManageAllPurchaseProducts(props) {
   };
 
   return (
-    <Layout>
+    <Layout titile="All Purchased Products">
       <AdminRoute>
         <div className="row my-3">
           <div className="col-md-10">
-            <h1 className="lead">Products Purchased</h1>
+            <h1 className="lead text-uppercase">All Products Purchased</h1>
           </div>
           <div className="col-md-2">
             <button
@@ -222,22 +328,28 @@ function ManageAllPurchaseProducts(props) {
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-12">
-              {loading ? (
+              {/* {loading ? (
                 <Loader />
-              ) : (
-                <MDBDataTable
-                  data={setData()}
-                  className="px-3"
-                  bordered
-                  striped
-                  hover
-                />
-              )}
+              ) : ( */}
+              <MDBDataTable
+                data={setData()}
+                className="px-3"
+                bordered
+                striped
+                hover
+              />
+              {/* )} */}
             </div>
           </div>
         </div>
         <Modal
-          title="Print Invoice"
+          title={
+            actionTriggered == 'ACTION_1'
+              ? 'Print invoice'
+              : actionTriggered == 'ACTION_2'
+              ? 'Print Invoice'
+              : 'Edit Invoice'
+          }
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
@@ -296,7 +408,7 @@ function ManageAllPurchaseProducts(props) {
                 </div>
               </div>
             </div>
-          ) : (
+          ) : actionTriggered == 'ACTION_2' ? (
             <div className="invoice__preview bg-white  rounded">
               <div ref={componentRef} className="p-5" id="invoice__preview">
                 {/* <p className="c_logo" key={item._id}>
@@ -399,6 +511,88 @@ function ManageAllPurchaseProducts(props) {
                       content={() => componentRef.current}
                     />
                   </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="container">
+              <div className="row">
+                <div className="col-md-12">
+                  <h1>Simple Inventory Table</h1>
+                  {/* <pre>{JSON.stringify(currentProduct, null, 4)}</pre> */}
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Product Name</th>
+                        <th>Added Quantity</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentProduct.map((item) => (
+                        <tr key={item._id}>
+                          <td>{item.name}</td>
+                          <td>
+                            {inEditMode.status &&
+                            inEditMode.rowKey === item._id ? (
+                              <input
+                                value={quantity}
+                                className="form-control "
+                                onChange={(event) =>
+                                  setQuantity(event.target.value)
+                                }
+                              />
+                            ) : (
+                              item.count
+                            )}
+                          </td>
+                          <td>
+                            {inEditMode.status &&
+                            inEditMode.rowKey === item._id ? (
+                              <React.Fragment>
+                                <button
+                                  className={'btn btn-success'}
+                                  onClick={() =>
+                                    handleUpdateQuantity({
+                                      slug: item.slug,
+                                      id: item._id,
+                                      previousQuantity: item.quantity,
+                                      purchaseId: item.purchaseId,
+                                      newQuantity: quantity,
+                                    })
+                                  }
+                                >
+                                  {ok ? <Spin /> : 'Save'}
+                                  {/* Save */}
+                                </button>
+
+                                <button
+                                  className={'btn btn-secondary'}
+                                  style={{ marginLeft: 8 }}
+                                  onClick={() => onCancel()}
+                                >
+                                  Cancel
+                                </button>
+                              </React.Fragment>
+                            ) : (
+                              <button
+                                className={'btn btn-primary'}
+                                onClick={() =>
+                                  onEdit({
+                                    id: item._id,
+                                    addedQuantity: item.count,
+                                  })
+                                }
+                              >
+                                Edit
+                              </button>
+                            )}
+                          </td>
+                          <td />
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

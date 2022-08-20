@@ -250,7 +250,7 @@ function ManageProductsForSale(props) {
               </button>
               <button
                 // disabled={cart.length === 0}
-                className="btn btn-danger mx-2"
+                className="btn btn-info mx-2"
                 onClick={() => {
                   setIsModalVisible(true);
                   setActionTriggered('ACTION_2');

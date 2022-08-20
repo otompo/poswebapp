@@ -3,6 +3,7 @@ export const ACTIONS = {
   ADD_ORDERS: 'ADD_ORDERS',
 };
 import { toast } from 'react-hot-toast';
+import generator from 'generate-password';
 
 export const addToCart = (product, cart) => {
   if (product.quantity === 0)
@@ -26,7 +27,14 @@ export const addToPurchase = (product, cart) => {
 
   if (!check) return toast.error('The product has been added to cart.');
   // toast.success(`${product.name} Added to cart`);
-  return { type: 'ADD_CART', payload: [...cart, { ...product, count: 0 }] };
+
+  return {
+    type: 'ADD_CART',
+    payload: [
+      ...cart,
+      { ...product, count: 0, purchaseId: generator.generate({ length: 6 }) },
+    ],
+  };
 };
 
 export const decrease = (data, id) => {

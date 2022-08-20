@@ -88,3 +88,51 @@ export const getPurchaseProductsLimit = catchAsync(async (req, res, next) => {
   });
   res.send(purchase);
 });
+
+// delete
+export const deletePurchase = catchAsync(async (req, res, next) => {
+  const { purchaseId } = req.query;
+  const purchase = await Purchase.findById(purchaseId);
+  if (!purchase) {
+    return next(new AppError('Purchase not found', 404));
+  }
+
+  // purchase.products.filter((item) => {
+  //   return update(item._id, item.quantity);
+  // });
+
+  const data = await Purchase.findByIdAndRemove(purchase._id);
+  res.status(200).send({ status: 'Success' });
+});
+
+// update
+export const updateQuantity = catchAsync(async (req, res, next) => {
+  let { purchaseId, newQuantity, previousQuantity, currentInvoiceID } =
+    req.body;
+
+  const { slug } = req.query;
+  const product = await Product.findOne({ slug });
+
+  // const purchase = await Purchase.findOne({ currentInvoiceID });
+
+  await Product.findOneAndUpdate(
+    { slug: product.slug },
+    { quantity: Number(previousQuantity) + Number(newQuantity) },
+    {
+      new: true,
+    },
+  );
+
+  const updatedProduct = await Purchase.updateOne(
+    { 'products.purchaseId': purchaseId },
+    {
+      $set: {
+        'products.$.count': Number(newQuantity),
+      },
+    },
+    {
+      new: true,
+    },
+  );
+  res.json(updatedProduct);
+});
