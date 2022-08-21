@@ -189,11 +189,11 @@ function ManageAllPurchaseProducts(props) {
           sort: 'asc',
         },
 
-        {
-          label: 'Added Grand Total Quantity',
-          field: 'grandTotalQuantity',
-          sort: 'asc',
-        },
+        // {
+        //   label: 'Added Grand Total Quantity',
+        //   field: 'grandTotalQuantity',
+        //   sort: 'asc',
+        // },
 
         {
           label: 'Action',
@@ -214,8 +214,6 @@ function ManageAllPurchaseProducts(props) {
                   <h6 style={{ color: '#e74c3c' }}>{product.name}</h6>
                   <h6 className="d-inline pl-4">Previous Quantity: </h6>
                   {product.quantity}{' '}
-                  <h6 className="d-inline pl-2">Added Quantity: </h6>{' '}
-                  {product.count}
                   <h6 className="d-inline pl-2">New Quantity: </h6>{' '}
                   {product.count + product.quantity}
                   <br />
@@ -224,15 +222,15 @@ function ManageAllPurchaseProducts(props) {
             </span>
           ),
 
-          date: moment(purchase.createdAt).format('ll'),
+          date: moment(purchase.purchaseTime).format('ll'),
           grandTotalQuantity: purchase.grandQuantity,
 
           action: (
-            <div className="container-fluid">
+            <div className="container">
               <div className="row">
                 <div className="col-md-6">
                   <button
-                    className="btn btn-info mx-2"
+                    className="btn btn-info"
                     onClick={() => {
                       setActionTriggered('ACTION_2');
                       showPrintData(purchase);
@@ -251,7 +249,7 @@ function ManageAllPurchaseProducts(props) {
                 </div> */}
                 <div className="col-md-6">
                   <button
-                    className="btn btn-success mx-2"
+                    className="btn btn-success"
                     onClick={() => {
                       setActionTriggered('ACTION_3');
                       showPrintData(purchase);
@@ -271,7 +269,7 @@ function ManageAllPurchaseProducts(props) {
   };
 
   return (
-    <Layout titile="All Purchased Products">
+    <Layout title="All Purchased Products">
       <AdminRoute>
         <div className="row my-3">
           <div className="col-md-10">
@@ -348,7 +346,7 @@ function ManageAllPurchaseProducts(props) {
               ? 'Print invoice'
               : actionTriggered == 'ACTION_2'
               ? 'Print Invoice'
-              : 'Edit Invoice'
+              : 'Edit Purchased Products'
           }
           visible={isModalVisible}
           onOk={handleOk}
@@ -518,7 +516,7 @@ function ManageAllPurchaseProducts(props) {
             <div className="container">
               <div className="row">
                 <div className="col-md-12">
-                  <h1>Simple Inventory Table</h1>
+                  {/* <h1>Simple Inventory Table</h1> */}
                   {/* <pre>{JSON.stringify(currentProduct, null, 4)}</pre> */}
                   <table className="table">
                     <thead>

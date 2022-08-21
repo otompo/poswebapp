@@ -176,6 +176,7 @@ const ManageProductsExpired = () => {
 
     return data;
   };
+
   return (
     <Layout title="Manage Products Expired">
       <AdminRoute>

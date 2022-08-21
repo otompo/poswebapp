@@ -117,12 +117,6 @@ const ManageProductsInstock = () => {
           field: 'createdat',
           sort: 'asc',
         },
-
-        {
-          label: 'Action',
-          field: 'action',
-          sort: 'asc',
-        },
       ],
       rows: [],
     };
@@ -141,44 +135,6 @@ const ManageProductsInstock = () => {
           sellingPrice: `${FormatCurrency(Number(product.sellingPrice))}`,
           expireDate: `${moment(product.expireDate).fromNow()}`,
           createdat: `${moment(product.createdAt).fromNow()}`,
-
-          action: (
-            <>
-              <div className="container">
-                <div className="row">
-                  <div className="col-md-8 offset-md-2">
-                    <span
-                      onClick={() =>
-                        loadModalData(
-                          product.name,
-                          product.slug,
-                          product.quantity,
-                        )
-                      }
-                      className="pt-1 pl-3"
-                    >
-                      {/* <Link></Link> */}
-                      <RedoOutlined
-                        className="text-primary d-flex justify-content-center"
-                        style={{ cursor: 'pointer', fontSize: 25 }}
-                      />
-                    </span>
-                  </div>
-                  {/* <div className="col-md-6">
-                    <span
-                      onClick={() => handleDelete(index)}
-                    
-                    >
-                      <DeleteOutlined
-                        className="text-danger d-flex justify-content-center"
-                        style={{ cursor: 'pointer', fontSize: 20 }}
-                      />
-                    </span>
-                  </div> */}
-                </div>
-              </div>
-            </>
-          ),
         });
       });
 

@@ -493,7 +493,7 @@ const ManageProducts = () => {
                 <a>
                   <div className="containerItems">
                     <div className="content">
-                      <h4>Out Stock</h4>
+                      <h4>Out Of Stock</h4>
                       <p>{totalOutOfStock && totalOutOfStock} </p>
                     </div>
                   </div>

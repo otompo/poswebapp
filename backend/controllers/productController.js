@@ -50,10 +50,9 @@ export const getAllProducts = catchAsync(async (req, res) => {
 });
 
 export const getSingleProduct = catchAsync(async (req, res, next) => {
-  const product = await Product.findOne({ slug: req.query.slug }).populate(
-    'category',
-    '_id name slug',
-  );
+  const product = await Product.findOne({ slug: req.query.slug })
+    .select('+active')
+    .populate('category', '_id name slug');
   res.send(product);
 });
 
@@ -62,6 +61,7 @@ export const getProductsInstock = catchAsync(async (req, res, next) => {
   const products = await Product.find({
     $expr: { $gt: [{ $toDouble: '$quantity' }, 30] },
   })
+    .select('+active')
     .populate('category', '_id name slug')
     .populate('user', '_id name')
     .sort({ createdAt: -1 });
@@ -77,6 +77,7 @@ export const getProductsOutOfStock = catchAsync(async (req, res, next) => {
   const products = await Product.find({
     $expr: { $lte: [{ $toDouble: '$quantity' }, 30] },
   })
+    .select('+active')
     .populate('category', '_id name slug')
     .populate('user', '_id name')
     .sort({ createdAt: -1 });
@@ -92,6 +93,7 @@ export const getProductAboutToOutofStock = catchAsync(
         { $expr: { $gte: [{ $toDouble: '$quantity' }, 30] } },
       ],
     })
+      .select('+active')
       .populate('category', '_id name slug')
       .populate('user', '_id name')
       .sort({ createdAt: -1 });
