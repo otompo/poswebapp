@@ -26,7 +26,6 @@ function ManageProductsAboutOutOfStock(props) {
   const [products, setProducts] = useState([]);
   const [grandQuantity, setGrandQuantity] = useState('');
   const [loading, setLoading] = useState(false);
-  const [ok, setOk] = useState(false);
   const [success, setSuccess] = useState(false);
   const [purchase, setProductsPurchase] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -278,7 +277,7 @@ function ManageProductsAboutOutOfStock(props) {
 
             <div className="container">
               <div className="row">
-                <div className="col-md-8">
+                <div className="col-md-12">
                   <ul>
                     <li>
                       <h2 className="text-uppercase text-bold">{name}</h2>

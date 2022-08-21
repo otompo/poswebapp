@@ -477,18 +477,6 @@ const ManageProducts = () => {
               </Link>
             </div>
             <div className="col-md-2">
-              <Link href="/admin/products/aboutofstock">
-                <a>
-                  <div className="containerItems">
-                    <div className="content">
-                      <h4>About to out Stock</h4>
-                      <p>{totalAboutOutStock && totalAboutOutStock} </p>
-                    </div>
-                  </div>
-                </a>
-              </Link>
-            </div>
-            <div className="col-md-2">
               <Link href="/admin/products/outofstock">
                 <a>
                   <div className="containerItems">
@@ -500,6 +488,19 @@ const ManageProducts = () => {
                 </a>
               </Link>
             </div>
+            <div className="col-md-2">
+              <Link href="/admin/products/aboutofstock">
+                <a>
+                  <div className="containerItems">
+                    <div className="content">
+                      <h4>About to go outof Stock</h4>
+                      <p>{totalAboutOutStock && totalAboutOutStock} </p>
+                    </div>
+                  </div>
+                </a>
+              </Link>
+            </div>
+
             <div className="col-md-2">
               <Link href="/admin/products/abouttoexpire">
                 <a>

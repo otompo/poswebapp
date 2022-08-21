@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Avatar } from 'antd';
-import { RedoOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import AdminRoute from '../routes/AdminRoutes';
 import { MDBDataTable } from 'mdbreact';
 import Layout from '../layout/Layout';
@@ -79,6 +79,34 @@ const ManageProductsInstock = () => {
     }
   };
 
+  const handleMakeProductInactive = async (e, slug) => {
+    e.preventDefault();
+    try {
+      setSuccess(true);
+      const { data } = await axios.patch(
+        `/api/admin/products/available/${slug}`,
+      );
+      toast.success('Success');
+      setSuccess(false);
+    } catch (err) {
+      toast.error(err);
+      setSuccess(false);
+    }
+  };
+
+  const handleMakeProductActive = async (e, slug) => {
+    e.preventDefault();
+    setSuccess(true);
+    try {
+      const { data } = await axios.put(`/api/admin/products/available/${slug}`);
+      toast.success('Success');
+      setSuccess(false);
+    } catch (err) {
+      toast.error(err.response.data.message);
+      setSuccess(false);
+    }
+  };
+
   const setData = () => {
     const data = {
       columns: [
@@ -117,6 +145,11 @@ const ManageProductsInstock = () => {
           field: 'createdat',
           sort: 'asc',
         },
+        {
+          label: 'Action',
+          field: 'action',
+          sort: 'asc',
+        },
       ],
       rows: [],
     };
@@ -135,6 +168,35 @@ const ManageProductsInstock = () => {
           sellingPrice: `${FormatCurrency(Number(product.sellingPrice))}`,
           expireDate: `${moment(product.expireDate).fromNow()}`,
           createdat: `${moment(product.createdAt).fromNow()}`,
+          action: (
+            <>
+              <div className="row">
+                <div className="col-md-6">
+                  {product && product.active ? (
+                    <span
+                      onClick={(e) => handleMakeProductActive(e, product.slug)}
+                    >
+                      <CheckOutlined
+                        className="text-success d-flex justify-content-center "
+                        style={{ cursor: 'pointer', fontSize: 25 }}
+                      />
+                    </span>
+                  ) : (
+                    <span
+                      onClick={(e) =>
+                        handleMakeProductInactive(e, product.slug)
+                      }
+                    >
+                      <CloseCircleOutlined
+                        className="text-danger d-flex justify-content-center "
+                        style={{ cursor: 'pointer', fontSize: 25 }}
+                      />
+                    </span>
+                  )}
+                </div>
+              </div>
+            </>
+          ),
         });
       });
 
@@ -147,17 +209,17 @@ const ManageProductsInstock = () => {
         <h1 className="lead">Manage Products Instock</h1>
 
         <hr />
-        {loading ? (
+        {/* {loading ? (
           <Loader />
-        ) : (
-          <MDBDataTable
-            data={setData()}
-            className="px-3"
-            bordered
-            striped
-            hover
-          />
-        )}
+        ) : ( */}
+        <MDBDataTable
+          data={setData()}
+          className="px-3"
+          bordered
+          striped
+          hover
+        />
+        {/* )} */}
         <Modal
           title={`Update ${tempData[0]} Quantity`}
           visible={isModalVisible}

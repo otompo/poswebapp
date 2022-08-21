@@ -164,7 +164,7 @@ const ManageEditProduct = () => {
             <div className="col-md-6">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label for="name">Product Name</label>
+                  <label htmlFor="name">Product Name</label>
                   <input
                     type="text"
                     id="name"
@@ -177,7 +177,7 @@ const ManageEditProduct = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label for="qty">Product Quantity</label>
+                  <label htmlFor="qty">Product Quantity</label>
                   <input
                     id="qty"
                     type="text"
@@ -191,7 +191,7 @@ const ManageEditProduct = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label for="cprice">Cost Price</label>
+                  <label htmlFor="cprice">Cost Price</label>
                   <input
                     id="cprice"
                     type="text"
@@ -204,7 +204,7 @@ const ManageEditProduct = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label for="sprice">Selling Price</label>
+                  <label htmlFor="sprice">Selling Price</label>
                   <input
                     id="sprice"
                     type="text"
@@ -219,7 +219,7 @@ const ManageEditProduct = () => {
                 </div>
 
                 <div className="form-group">
-                  <label for="expireDate">Expire Date</label>
+                  <label htmlFor="expireDate">Expire Date</label>
                   <DatePicker
                     id="expireDate"
                     className="w-100"

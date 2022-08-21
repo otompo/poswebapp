@@ -222,7 +222,7 @@ export const makeProductInActive = catchAsync(async (req, res, next) => {
     { slug: product.slug },
     {
       active: false,
-      quantity: 0,
+      // quantity: 0,
     },
     { new: true },
   );
@@ -240,6 +240,15 @@ export const makeProductActive = catchAsync(async (req, res, next) => {
     {
       active: true,
     },
+    { new: true },
+  );
+  res.send({ ok: true });
+});
+
+export const updateAppQuantity = catchAsync(async (req, res, next) => {
+  const data = await Product.updateMany(
+    { sellingPrice: 16 },
+    { slug: 'calmel' },
     { new: true },
   );
   res.send({ ok: true });
