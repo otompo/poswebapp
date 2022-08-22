@@ -13,10 +13,7 @@ export const getAllProductsForMobile = catchAsync(async (req, res) => {
     .sort({ createdAt: -1 })
     .populate('category', '_id name slug')
     .populate('user', '_id name');
-  res.status(200).send({
-    total: products.length,
-    products,
-  });
+  res.status(200).send(products);
 });
 
 export const productsCount = async (req, res) => {
