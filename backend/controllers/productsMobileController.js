@@ -4,7 +4,7 @@ import slugify from 'slugify';
 import AppError from '../utils/appError';
 
 export const getAllProductsForMobile = catchAsync(async (req, res) => {
-  const perPage = 50;
+  const perPage = 5;
   const page = req.query.page ? req.query.page : 1;
   const products = await Product.find({ active: true })
     .select('+active')
