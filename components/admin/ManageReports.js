@@ -228,12 +228,17 @@ function ManageReports(props) {
           field: 'totalexpenses',
           sort: 'asc',
         },
-
+        // {
+        //   label: 'Total Sub-Profit',
+        //   field: 'subProfit',
+        //   sort: 'asc',
+        // },
         {
           label: 'Total Profit',
           field: 'profit',
           sort: 'asc',
         },
+
         {
           label: 'Action',
           field: 'action',
@@ -254,6 +259,7 @@ function ManageReports(props) {
           createdat: `${moment(report.createdAt).format('LL')}`,
           totalsales: `${FormatCurrency(report.totalSales)}`,
           totalexpenses: `${FormatCurrency(report.totalExpenses)}`,
+          // subProfit: `${FormatCurrency(report.subProfit)}`,
           profit: `${FormatCurrency(report.profit)}`,
 
           action: (
@@ -564,7 +570,7 @@ function ManageReports(props) {
                 </div>
               </div>
               <hr />
-
+              {/* <h2>{JSON.stringify(tempData, null, 4)} </h2> */}
               {tempData.map((temp) => (
                 <>
                   <article
@@ -596,6 +602,20 @@ function ManageReports(props) {
                     >
                       {' '}
                       {FormatCurrency(temp.totalExpenses)}
+                    </p>
+                  </article>
+                  <article className="mt-10 mb-14 flex items-end justify-end">
+                    <h5 className="d-inline">Total Sub-Profit:</h5>
+                    <p
+                      className="d-inline"
+                      style={{
+                        fontWeight: 'bold',
+                        fontSize: '18px',
+                        color: '#ff8c00',
+                      }}
+                    >
+                      {' '}
+                      {FormatCurrency(temp.subProfit)}
                     </p>
                   </article>
                   <article className="mt-10 mb-14 flex items-end justify-end">
