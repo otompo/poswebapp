@@ -1,6 +1,5 @@
 import Product from '../models/productModel';
 import catchAsync from '../utils/catchAsync';
-import slugify from 'slugify';
 import AppError from '../utils/appError';
 
 export const getAllProductsForMobile = catchAsync(async (req, res) => {
@@ -18,7 +17,7 @@ export const getAllProductsForMobile = catchAsync(async (req, res) => {
 
 export const productsCount = async (req, res) => {
   try {
-    const count = await Product.countDocuments();
+    const count = await Product.countDocuments({ active: true });
     // console.log(count);
     res.json(count);
   } catch (err) {
