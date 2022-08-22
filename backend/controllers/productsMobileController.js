@@ -18,3 +18,13 @@ export const getAllProductsForMobile = catchAsync(async (req, res) => {
     products,
   });
 });
+
+export const productsCount = async (req, res) => {
+  try {
+    const count = await Product.countDocuments();
+    // console.log(count);
+    res.json(count);
+  } catch (err) {
+    console.log(err);
+  }
+};
