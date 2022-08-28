@@ -214,6 +214,8 @@ function ManageAllPurchaseProducts(props) {
                   <h6 style={{ color: '#e74c3c' }}>{product.name}</h6>
                   <h6 className="d-inline pl-4">Previous Quantity: </h6>
                   {product.quantity}{' '}
+                  <h6 className="d-inline pl-4">Added Quantity: </h6>
+                  {product.count}{' '}
                   <h6 className="d-inline pl-2">New Quantity: </h6>{' '}
                   {product.count + product.quantity}
                   <br />
@@ -535,10 +537,11 @@ function ManageAllPurchaseProducts(props) {
                             inEditMode.rowKey === item._id ? (
                               <input
                                 value={quantity}
-                                className="form-control "
+                                className="form-control"
                                 onChange={(event) =>
                                   setQuantity(event.target.value)
                                 }
+                                style={{ width: '50%' }}
                               />
                             ) : (
                               item.count
@@ -549,7 +552,7 @@ function ManageAllPurchaseProducts(props) {
                             inEditMode.rowKey === item._id ? (
                               <React.Fragment>
                                 <button
-                                  className={'btn btn-success'}
+                                  className="btn btn-success"
                                   onClick={() =>
                                     handleUpdateQuantity({
                                       slug: item.slug,
@@ -565,7 +568,7 @@ function ManageAllPurchaseProducts(props) {
                                 </button>
 
                                 <button
-                                  className={'btn btn-secondary'}
+                                  className="btn btn-secondary"
                                   style={{ marginLeft: 8 }}
                                   onClick={() => onCancel()}
                                 >

@@ -11,15 +11,30 @@ cloudinary.config({
 });
 
 export const createCompanyDetails = async (req, res) => {
+  // console.log(req.body);
   try {
-    const { slug } = req.body;
+    const { slug, companyLogo } = req.body;
     const found = await Settings.findOne({ slug });
 
+    const imageResult = await cloudinary.v2.uploader.upload(companyLogo, {
+      folder: 'pos',
+    });
+
     if (found) {
-      // update
-      const updated = await Settings.findOneAndUpdate({ slug }, req.body, {
-        new: true,
-      });
+      await cloudinary.v2.uploader.destroy(found.companyLogo.public_id);
+      const updated = await Settings.findOneAndUpdate(
+        { slug },
+        {
+          ...req.body,
+          companyLogo: {
+            public_id: imageResult.public_id,
+            url: imageResult.url,
+          },
+        },
+        {
+          new: true,
+        },
+      );
       return res.json(updated);
     } else {
       // create

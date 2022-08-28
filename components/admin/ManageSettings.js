@@ -9,6 +9,8 @@ import axios from 'axios';
 const { TextArea } = Input;
 
 const ManageSettings = () => {
+  const [uploadButtonText, setUploadButtonText] = useState('Upload Image');
+  const [imagePreview, setImagePreview] = useState('');
   const [loading, setLoading] = useState(false);
 
   const {
@@ -48,20 +50,68 @@ const ManageSettings = () => {
       setLoading(false);
     }
   };
+
+  const handleImage = (e) => {
+    if (e.target.name === 'image') {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImagePreview(reader.result);
+          setCompanyLogo(reader.result);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+      setImagePreview('');
+    }
+  };
+
   const handleDescription = (e) => {
     setDescription(e);
   };
   return (
-    <Layout title="Manage Messages">
+    <Layout title="Manage Settings">
       <AdminRoute>
         <h1 className="lead">Company Details</h1>
         <hr />
         <Row>
           <Col span={18} offset={2}>
             <Divider>
-              <h1>Company Settings</h1>
-              {/* <p>Set full width image title and subtitle</p> */}
+              {companyLogo ? (
+                <Avatar
+                  size={80}
+                  src={companyLogo}
+                  style={{ border: '2px solid #000' }}
+                />
+              ) : (
+                <Avatar
+                  size={80}
+                  src="/img/preview.ico"
+                  style={{ border: '2px solid #000' }}
+                />
+              )}
             </Divider>
+          </Col>
+          <Col span={18} offset={2}>
+            <div className="row">
+              <div className="col-md-6 offset-md-4">
+                <label
+                  className="btn btn-dark btn-block text-left my-3 text-center"
+                  style={{
+                    width: imagePreview && imagePreview ? '60%' : '60%',
+                  }}
+                >
+                  {uploadButtonText}
+                  <input
+                    type="file"
+                    name="image"
+                    size="large"
+                    onChange={handleImage}
+                    accept="image/*"
+                    hidden
+                  />
+                </label>
+              </div>
+            </div>
           </Col>
 
           <Col span={12} offset={5}>

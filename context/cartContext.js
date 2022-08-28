@@ -38,22 +38,6 @@ const CartProvider = ({ children }) => {
     localStorage.setItem('__next__cart01__devat', JSON.stringify(cart));
   }, [cart]);
 
-  // useEffect(() => {
-  //   localStorage.setItem('cartItems', JSON.stringify(cart));
-  // }, [cart]);
-
-  // useEffect(() => {
-  //   dispatch({
-  //     type: 'ADD_TO_CART',
-  //     payload: JSON.parse(localStorage.getItem('cartItems')),
-  //   });
-
-  //   dispatch({
-  //     type: 'REMOVE_FROM_CART',
-  //     payload: JSON.parse(localStorage.getItem('cartItems')),
-  //   });
-  // }, []);
-
   return (
     <CartContext.Provider value={{ state, dispatch }}>
       {children}

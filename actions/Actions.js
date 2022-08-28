@@ -13,14 +13,14 @@ export const addToCart = (product, cart) => {
     return item._id !== product._id;
   });
 
+  // console.log('check', check);
+
   if (!check) return toast.error('The product has been added to cart.');
   // toast.success(`${product.name} Added to cart`);
   return { type: 'ADD_CART', payload: [...cart, { ...product, count: 1 }] };
 };
-export const addToPurchase = (product, cart) => {
-  if (product.quantity === 0)
-    return toast.error('This product is out of stock.');
 
+export const addToPurchase = (product, cart) => {
   const check = cart.every((item) => {
     return item._id !== product._id;
   });
