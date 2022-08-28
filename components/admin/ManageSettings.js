@@ -185,7 +185,7 @@ const ManageSettings = () => {
               onClick={handleUpdateSubmit}
               type="primary"
               style={{ margin: '15px 0px 25px 0px' }}
-              // loading={loading}
+              loading={loading}
               block
             >
               Save

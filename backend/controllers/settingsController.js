@@ -11,7 +11,6 @@ cloudinary.config({
 });
 
 export const createCompanyDetails = async (req, res) => {
-  // console.log(req.body);
   try {
     const { slug, companyLogo } = req.body;
     const found = await Settings.findOne({ slug });
@@ -19,9 +18,9 @@ export const createCompanyDetails = async (req, res) => {
     const imageResult = await cloudinary.v2.uploader.upload(companyLogo, {
       folder: 'pos',
     });
-
     if (found) {
       await cloudinary.v2.uploader.destroy(found.companyLogo.public_id);
+      // update
       const updated = await Settings.findOneAndUpdate(
         { slug },
         {
@@ -38,7 +37,13 @@ export const createCompanyDetails = async (req, res) => {
       return res.json(updated);
     } else {
       // create
-      const created = await new Settings(req.body).save();
+      const created = await new Settings({
+        ...req.body,
+        companyLogo: {
+          public_id: imageResult.public_id,
+          url: imageResult.url,
+        },
+      }).save();
       return res.json(created);
     }
   } catch (err) {

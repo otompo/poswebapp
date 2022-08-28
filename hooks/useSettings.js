@@ -25,7 +25,7 @@ const useSettings = () => {
       setEmail(data.email);
       setContactNumber(data.contactNumber);
       setWebsite(data.website);
-      setCompanyLogo(data.companyLogo);
+      setCompanyLogo(data.companyLogo.url);
       setDescription(data.description);
     } catch (err) {
       console.log(err);
