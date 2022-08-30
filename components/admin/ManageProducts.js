@@ -19,6 +19,7 @@ import { toast } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import FormatCurrency from '../FormatCurrency';
+import qrcode from 'qrcode';
 const { confirm } = Modal;
 const { Option } = Select;
 
@@ -46,6 +47,7 @@ const ManageProducts = () => {
   const [totalAboutToExpire, setTotalAboutToExpire] = useState('');
   const [totalExpire, setTotalExpire] = useState('');
   const [tempData, setTempData] = useState([]);
+  const [qrCodeData, setqrCodeData] = useState('');
   const [actionTriggered, setActionTriggered] = useState('');
   const [quantity, setQuantity] = useState('');
   const [file, setFile] = useState('');
@@ -76,6 +78,13 @@ const ManageProducts = () => {
     loadTotalAboutToExpire();
     loadTotalExpired();
   }, [success]);
+
+  const genarateQrCode = (product) => {
+    let stringdata = JSON.stringify(product);
+    qrcode.toDataURL(stringdata).then((data) => {
+      setqrCodeData(data);
+    });
+  };
 
   const loadTotalInStock = async () => {
     try {
@@ -405,7 +414,7 @@ const ManageProducts = () => {
               <div className="container">
                 <div className="row">
                   <Tooltip title={`Edit ${product.name}`} color="green">
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                       <Link href={`/admin/products/${product.slug}`}>
                         <a>
                           <EditOutlined
@@ -416,27 +425,7 @@ const ManageProducts = () => {
                       </Link>
                     </div>
                   </Tooltip>
-                  {/* <div className="col-md-4">
-                    <Tooltip title={`Restock ${product.name}`} color="blue">
-                      <span
-                        onClick={() => {
-                          loadEditQtyData(
-                            product.name,
-                            product.slug,
-                            product.quantity,
-                          );
-                          setActionTriggered('ACTION_2');
-                        }}
-                        // className="pt-1 pl-3"
-                      >
-                        <RedoOutlined
-                          className="text-primary d-flex justify-content-center"
-                          style={{ cursor: 'pointer', fontSize: 25 }}
-                        />
-                      </span>
-                    </Tooltip>
-                  </div> */}
-                  <div className="col-md-6">
+                  <div className="col-md-4">
                     <Tooltip title={`Delete ${product.name}`} color="red">
                       <span
                         onClick={() => handleDelete(index)}
@@ -448,6 +437,20 @@ const ManageProducts = () => {
                         />
                       </span>
                     </Tooltip>
+                  </div>
+                  <div className="col-md-4">
+                    <Button
+                      type="primary"
+                      shape="round"
+                      // icon={<UploadOutlined size={35} />}
+                      size={35}
+                      onClick={() => {
+                        setIsModalVisible(true);
+                        genarateQrCode(product);
+                      }}
+                    >
+                      QRCODE
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -596,10 +599,7 @@ const ManageProducts = () => {
               <span>Add Product</span>
             ) : (
               <>
-                {' '}
-                <span>Restock {tempData[0]} Quantity</span>
-                <br />
-                <span className="lead">Current Quantity is {tempData[1]}</span>
+                <span className="lead text-uppercase">Genarate QRCode</span>
               </>
             )
           }
@@ -711,27 +711,19 @@ const ManageProducts = () => {
           ) : (
             <div className="row">
               <div className="col-md-12">
-                <form onSubmit={handleQuantityRestock}>
+                <form>
                   <div className="form-group">
-                    <input
-                      type="number"
-                      // name="quantity"
-                      value={quantity}
-                      onChange={(e) => setQuantity(e.target.value)}
-                      className="form-control mb-4 p-2"
-                      placeholder="Enter quantity"
-                      required
-                    />
+                    <img src={qrCodeData} width="100%" height="100%" />
                   </div>
 
-                  <div className="d-grid gap-2 my-2 ">
+                  <div className="d-grid gap-2 my-2 text-center">
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary btn-block"
                       // disabled={!values.name || loading}
-                      type="submit"
+                      // type="submit"
                     >
                       {/* {ok ? <SyncOutlined spin /> : 'Submit'} */}
-                      Update
+                      DOWNLOAD QRCODE
                     </button>
                   </div>
                 </form>

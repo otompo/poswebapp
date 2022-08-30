@@ -80,13 +80,13 @@ const ManageSettings = () => {
                 <Avatar
                   size={80}
                   src={companyLogo}
-                  style={{ border: '2px solid #000' }}
+                  style={{ border: '2px solid #000', width: 150, height: 150 }}
                 />
               ) : (
                 <Avatar
                   size={80}
                   src="/img/preview.ico"
-                  style={{ border: '2px solid #000' }}
+                  style={{ border: '2px solid #000', width: 150, height: 150 }}
                 />
               )}
             </Divider>
