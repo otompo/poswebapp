@@ -8,11 +8,9 @@ const AuthProvider = ({ children }) => {
     user: null,
     token: '',
   });
-  const token = auth && auth.token ? auth.token : '';
 
   // config axios
   if (process.server) {
-    axios.defaults.baseURL = process.env.API;
     axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.token}`;
   } else {
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
@@ -20,8 +18,8 @@ const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
-      setAuth(JSON.parse(localStorage.getItem('user')));
+    if (localStorage.getItem('auth')) {
+      setAuth(JSON.parse(localStorage.getItem('auth')));
     }
   }, []);
 

@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid';
 import slugify from 'slugify';
 import cloudinary from 'cloudinary';
 import { signToken } from '../middlewares/auth';
+
 // cluodnary
 
 cloudinary.config({

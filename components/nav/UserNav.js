@@ -1,23 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import AdminNav from './AdminNav';
-import { Context } from '../../context';
+import { AuthContext } from '../../context';
 import { useRouter } from 'next/router';
-import { Avatar, Image } from 'antd';
 
 const UserNav = () => {
   const router = useRouter();
+  const [auth, setAuth] = useContext(AuthContext);
+  const { user } = auth;
   const [current, setCurrent] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  // const {
-  //   state: { user },
-  //   dispatch,
-  // } = useContext(Context);
 
   useEffect(() => {
     process.browser && setCurrent(window.location.pathname);
   }, [process.browser && window.location.pathname]);
+
+  const handleLogout = () => {
+    // remove from local storage
+    localStorage.removeItem('auth');
+    // remove from context
+    setAuth({
+      user: null,
+      token: '',
+    });
+    router.push('/');
+  };
 
   return (
     <div className="nav flex-column nav-pills mt-2">
@@ -59,10 +65,10 @@ const UserNav = () => {
         </a>
       </Link>
 
-      <AdminNav />
+      {user && user.role && !user.role.includes('admin') ? '' : <AdminNav />}
 
       <p
-        // onClick={logout}
+        onClick={handleLogout}
         className="logout"
         style={{ color: '#ff0000', cursor: 'pointer', marginLeft: 11 }}
       >

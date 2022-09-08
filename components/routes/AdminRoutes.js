@@ -1,7 +1,35 @@
+import { useEffect, useContext, useState } from 'react';
+import LoadingToRedirect from '../layout/LoadingToRedirect';
+import { AuthContext } from '../../context';
 import UserNav from '../nav/UserNav';
+import axios from 'axios';
 import Navbar from '../Navbar';
+import { useRouter } from 'next/router';
 
 const AdminRoute = ({ children }) => {
+  const router = useRouter();
+  const [auth, setAuth] = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (auth?.token) getCurrentAdmin();
+  }, [auth?.token]);
+
+  const getCurrentAdmin = async () => {
+    try {
+      const { data } = await axios.get('/api/admin/current');
+      console.log('data', data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      router.push('/');
+    }
+  };
+
+  if (loading) {
+    return <LoadingToRedirect />;
+  }
+
   return (
     <>
       <div className="container-fluid user_dashboard">

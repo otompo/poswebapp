@@ -128,7 +128,6 @@ function ManageProductsForSale(props) {
       setOk(false);
     } catch (err) {
       console.log(err.response);
-      toast.error(err.response.data.message);
       setLoading(false);
       setOk(false);
     }

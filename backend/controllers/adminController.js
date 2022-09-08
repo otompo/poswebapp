@@ -6,11 +6,11 @@ import AppError from '../utils/appError';
 import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 
-export const currentAdmin = catchAsync(async (req, res) => {
+export const currentAdmin = catchAsync(async (req, res, next) => {
   let user = await User.findById(req.user._id).select('-password');
-  // console.log("CURRENT INSTRUCTOR => ", user);
+
   if (!user.role.includes('admin')) {
-    return res.sendStatus(403);
+    return next(new AppError('Not a admin', 400));
   } else {
     res.json({ ok: true });
   }

@@ -1,7 +1,8 @@
-import React, { useState, Fragment, useContext } from 'react';
+import React, { useEffect, useState, Fragment, useContext } from 'react';
+import LoadingToRedirect from '../layout/LoadingToRedirect';
+import { AuthContext } from '../../context';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
-import { AuthContext } from '../../context';
 import { Spin } from 'antd';
 import axios from 'axios';
 
@@ -11,6 +12,12 @@ const Login = () => {
   const [email, setEmail] = useState('sasco@gmail.com');
   const [password, setPassword] = useState('otompo123@');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (auth?.token) {
+      router.push('/user');
+    }
+  }, [auth]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +29,7 @@ const Login = () => {
       });
       setAuth(data);
       // save in local storage
-      localStorage.setItem('user', JSON.stringify(data));
+      localStorage.setItem('auth', JSON.stringify(data));
       toast.success('Success');
       router.push('/user');
       setLoading(false);
@@ -32,6 +39,9 @@ const Login = () => {
     }
   };
 
+  if (auth?.token) {
+    return <LoadingToRedirect />;
+  }
   return (
     <Fragment>
       <div className="container-fluid">

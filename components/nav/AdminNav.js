@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 const AdminNav = () => {
   const [current, setCurrent] = useState('');
-
   useEffect(() => {
     process.browser && setCurrent(window.location.pathname);
   }, [process.browser && window.location.pathname]);

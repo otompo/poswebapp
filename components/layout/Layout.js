@@ -1,28 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
 import Head from 'next/head';
-import Footer from '../Footer';
-import axios from 'axios';
 
 const Layout = ({ children, title = 'POS' }) => {
-  const [currentUser, setCurrentUser] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    loadCurrentUser();
-  }, []);
-
-  const loadCurrentUser = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get('/api/user/profile');
-      // console.log(data);
-      setCurrentUser(data);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
   return (
     <div>
       <Head>

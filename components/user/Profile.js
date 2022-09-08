@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { SyncOutlined } from '@ant-design/icons';
 import { toast } from 'react-hot-toast';
-import { Avatar, Badge, Button, Image, Spin } from 'antd';
 import UserRoute from '../routes/UserRoutes';
 import Layout from '../layout/Layout';
 import Loader from '../layout/Loader';
@@ -26,11 +25,6 @@ const UserProfilePage = () => {
 
   const [passwordCurrent, setPasswordCurrent] = useState('');
   const [password, setPassword] = useState('');
-
-  // const {
-  //   state: { user },
-  //   dispatch,
-  // } = useContext(Context);
 
   useEffect(() => {
     loadUser();
@@ -60,9 +54,9 @@ const UserProfilePage = () => {
         ...values,
       });
 
-      const as = JSON.parse(await window.localStorage.getItem('user'));
+      const as = JSON.parse(await window.localStorage.getItem('auth'));
       as.user = data;
-      // console.log(as.user);
+
       dispatch({
         type: 'UPDATE_SUCCESS',
         payload: as.user,
