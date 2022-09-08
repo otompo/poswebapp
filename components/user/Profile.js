@@ -4,9 +4,7 @@ import { SyncOutlined } from '@ant-design/icons';
 import { toast } from 'react-hot-toast';
 import UserRoute from '../routes/UserRoutes';
 import Layout from '../layout/Layout';
-import Loader from '../layout/Loader';
 import axios from 'axios';
-// import { Context } from '../../context';
 
 const UserProfilePage = () => {
   const router = useRouter();

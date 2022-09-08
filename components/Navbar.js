@@ -4,7 +4,6 @@ import NProgress from 'nprogress';
 import Router, { useRouter } from 'next/router';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import Fade from 'react-reveal/Fade';
-import axios from 'axios';
 import { AuthContext } from '../context';
 Router.onRouteChangeStart = (url) => NProgress.start();
 Router.onRouteChangeComplete = (url) => NProgress.done();

@@ -8,6 +8,7 @@ const NotFoundPage = () => {
       <Fragment>
         <div className="page-not-found-wrapper mt-5">
           <h1 id="title_404">404!</h1>
+          <h3 id="description_404">Page Not Found</h3>
         </div>
       </Fragment>
     </Layout>
