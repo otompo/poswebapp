@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MDBDataTable } from 'mdbreact';
 import { Tooltip, Badge, Button } from 'antd';
 import { CoffeeOutlined } from '@ant-design/icons';
@@ -9,10 +9,11 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AdminRoute from '../routes/AdminRoutes';
+import { AuthContext } from '../../context';
 
 function ManageTrashUsers(props) {
+  const [auth, setAuth] = useContext(AuthContext);
   const router = useRouter();
-
   const [users, setUsers] = useState('');
   const [trash, setTrash] = useState('');
   const [success, setSuccess] = useState(false);
@@ -21,7 +22,7 @@ function ManageTrashUsers(props) {
   useEffect(() => {
     getAllUsersInTrash();
     getTotalUsersInTrash();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const getAllUsersInTrash = async () => {
     try {

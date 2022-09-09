@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, Avatar } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { Modal } from 'antd';
 import { CheckOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import AdminRoute from '../routes/AdminRoutes';
 import { MDBDataTable } from 'mdbreact';
@@ -7,11 +7,12 @@ import Layout from '../layout/Layout';
 import moment from 'moment';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import Loader from '../layout/Loader';
 import FormatCurrency from '../FormatCurrency';
+import { AuthContext } from '../../context';
 
 const { confirm } = Modal;
 const ManageProductsInstock = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -33,7 +34,7 @@ const ManageProductsInstock = () => {
 
   useEffect(() => {
     loadProductsInStock();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const loadProductsInStock = async () => {
     try {

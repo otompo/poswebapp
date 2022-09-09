@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import AdminRoute from '../routes/AdminRoutes';
@@ -6,8 +6,10 @@ import Loader from '../layout/Loader';
 import Layout from '../layout/Layout';
 import FormatCurrency from '../FormatCurrency';
 import { Bar } from 'react-chartjs-2';
+import { AuthContext } from '../../context';
 
 const ManageStatistics = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const [grandTotalSales, setGrandTotalSales] = useState([]);
   const [products, setProducts] = useState([]);
   const [reports, setReports] = useState([]);
@@ -15,7 +17,7 @@ const ManageStatistics = () => {
 
   useEffect(() => {
     showDailySales();
-  }, []);
+  }, [auth?.token]);
 
   const showDailySales = async () => {
     try {

@@ -1,6 +1,5 @@
 import { CaretUpOutlined, TeamOutlined, BookOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import Card from './Card';
 import { Line } from 'react-chartjs-2';
@@ -8,8 +7,10 @@ import Loader from '../layout/Loader';
 import moment from 'moment';
 import useNumbers from '../../hooks/useNumbers';
 import FormatCurrency from '../../helpers/FormatCurrency';
+import { AuthContext } from '../../context';
 
 const Dashboard = ({ children }) => {
+  const [auth, setAuth] = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [totalSales, setTotalSales] = useState('');
   const [dailySales, setDailySales] = useState([]);
@@ -18,7 +19,7 @@ const Dashboard = ({ children }) => {
   useEffect(() => {
     getTotalSales();
     showDailySales();
-  }, []);
+  }, [auth?.token]);
 
   const showDailySales = async () => {
     try {
@@ -80,27 +81,22 @@ const Dashboard = ({ children }) => {
         <div className="row mt-5">
           <Card
             backgroundColor="#33195a"
-            icon={<TeamOutlined style={{ color: 'green' }} />}
             cade_title="Total Staff"
             cade_total={users}
           />
-
           <Card
             backgroundColor="#33195a"
-            icon={<BookOutlined style={{ color: 'green' }} />}
             cade_title="Total Products"
             cade_total={products}
           />
 
           <Card
             backgroundColor="#33195a"
-            icon={<CaretUpOutlined style={{ color: 'green' }} />}
             cade_title="Total Categories"
             cade_total={categories}
           />
           <Card
             backgroundColor="#33195a"
-            icon={<CaretUpOutlined style={{ color: 'green' }} />}
             cade_title="Total Sales"
             cade_total={FormatCurrency(Number(totalSales))}
           />

@@ -3,7 +3,6 @@ import AdminRoute from '../routes/AdminRoutes';
 import Layout from '../layout/Layout';
 import moment from 'moment';
 import axios from 'axios';
-import { toast } from 'react-hot-toast';
 import { PrinterOutlined } from '@ant-design/icons';
 import Loader from '../layout/Loader';
 import { Button, Modal, Avatar } from 'antd';
@@ -12,10 +11,13 @@ import FormatCurrency from '../FormatCurrency';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MDBDataTable } from 'mdbreact';
+import { useContext } from 'react';
+import { AuthContext } from '../../context';
 
 const { confirm } = Modal;
 
 const ManageDailySales = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
   const [startdate, enddate] = dateRange;
   const [sales, setSales] = useState([]);
@@ -54,7 +56,7 @@ const ManageDailySales = () => {
 
   useEffect(() => {
     handleSalesSubmit();
-  }, []);
+  }, [auth?.token]);
 
   const handleSalesSubmit = async () => {
     try {

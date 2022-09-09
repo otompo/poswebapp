@@ -18,7 +18,7 @@ const UserRoutes = ({ children, showNav = true }) => {
   const getCurrentAdmin = async () => {
     try {
       const { data } = await axios.get('/api/user/current');
-      console.log('data', data);
+
       setLoading(false);
     } catch (err) {
       console.log(err);

@@ -6,7 +6,6 @@ import AdminRouter from '../routes/AdminRoutes';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import 'react-datepicker/dist/react-datepicker.css';
-import Loader from '../layout/Loader';
 import Layout from '../layout/Layout';
 import ReactToPrint from 'react-to-print';
 import { CartContext } from '../../context/cartContext';
@@ -17,16 +16,17 @@ import { PrinterOutlined } from '@ant-design/icons';
 import useSettings from '../../hooks/useSettings';
 import renderHTML from 'react-render-html';
 import moment from 'moment';
+import { AuthContext } from '../../context';
 
 const { confirm } = Modal;
 
 function ManagePurchaseProducts(props) {
+  const [auth, setAuth] = useContext(AuthContext);
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
   const [products, setProducts] = useState([]);
   const [grandQuantity, setGrandQuantity] = useState('');
   const [loading, setLoading] = useState(false);
-  const [ok, setOk] = useState(false);
   const [success, setSuccess] = useState(false);
   const [purchase, setProductsPurchase] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -65,7 +65,7 @@ function ManagePurchaseProducts(props) {
   useEffect(() => {
     showProducts();
     showPurchaseProducts();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const componentRef = useRef();
 

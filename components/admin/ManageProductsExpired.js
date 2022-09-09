@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useContext, useRef, useEffect, useState } from 'react';
 
 import {
   PrinterOutlined,
@@ -12,13 +12,14 @@ import Layout from '../layout/Layout';
 import moment from 'moment';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import Loader from '../layout/Loader';
 import ReactToPrint from 'react-to-print';
 import FormatCurrency from '../FormatCurrency';
+import { AuthContext } from '../../context';
 
 const { confirm } = Modal;
 
 const ManageProductsExpired = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -44,7 +45,7 @@ const ManageProductsExpired = () => {
 
   useEffect(() => {
     loadProductsExpired();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const loadProductsExpired = async () => {
     try {

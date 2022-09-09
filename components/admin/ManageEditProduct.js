@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Spin, Progress, Image } from 'antd';
-import Link from 'next/link';
-import { SyncOutlined } from '@ant-design/icons';
+import React, { useContext, useEffect, useState } from 'react';
+import { Spin } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import AdminRoute from '../routes/AdminRoutes';
@@ -10,8 +8,10 @@ import { toast } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useRouter } from 'next/router';
+import { AuthContext } from '../../context';
 
 const ManageEditProduct = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const router = useRouter();
   const { slug } = router.query;
   const [values, setValues] = useState({
@@ -34,6 +34,7 @@ const ManageEditProduct = () => {
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
+
   // console.log('selectedCategory', selectedCategory);
   // console.log('checked', checked);
 
@@ -41,7 +42,7 @@ const ManageEditProduct = () => {
     loadSingleProducts();
     loadCategories();
     // setSelectedCategory(checked);
-  }, [slug]);
+  }, [auth?.token, slug]);
 
   const loadSingleProducts = async () => {
     try {

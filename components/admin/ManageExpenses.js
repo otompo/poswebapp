@@ -91,7 +91,6 @@ const ManageExpenses = () => {
       setIsModalVisible(false);
     } catch (err) {
       console.log(err);
-
       setSuccess(false);
     }
   };

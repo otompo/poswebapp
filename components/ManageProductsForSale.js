@@ -18,15 +18,20 @@ import { PrinterOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import useSettings from '../hooks/useSettings';
 import renderHTML from 'react-render-html';
+import { ProductContext } from '../context/productsContext';
+import { AuthContext } from '../context';
 
 const { confirm } = Modal;
 
 function ManageProductsForSale(props) {
+  const [auth, setAuth] = useContext(AuthContext);
   const [actionTriggered, setActionTriggered] = useState('');
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
   const [subTotal, setSubTotal] = useState(0);
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
+  const [product, setProduct] = useContext(ProductContext);
+  const { products } = product;
   const [quantitySold, setQuantitySold] = useState('');
   const [loading, setLoading] = useState(false);
   const [ok, setOk] = useState(false);
@@ -95,7 +100,7 @@ function ManageProductsForSale(props) {
   useEffect(() => {
     showProducts();
     showSales();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const componentRef = useRef();
 
@@ -123,7 +128,8 @@ function ManageProductsForSale(props) {
       setLoading(true);
       setOk(true);
       const { data } = await axios.get(`/api/products`);
-      setProducts(data.products);
+
+      setProduct((prev) => ({ ...prev, products: data.products }));
       setLoading(false);
       setOk(false);
     } catch (err) {
@@ -264,6 +270,7 @@ function ManageProductsForSale(props) {
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-7">
+              {/* <pre>{JSON.stringify(product, null, 2)}</pre> */}
               {loading ? (
                 <Loader />
               ) : (

@@ -1,29 +1,27 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Modal } from 'antd';
-import {
-  PrinterOutlined,
-  CheckOutlined,
-  CloseCircleOutlined,
-} from '@ant-design/icons';
+import React, { useRef, useEffect, useState, useContext } from 'react';
+import { PrinterOutlined } from '@ant-design/icons';
 import AdminRoute from '../routes/AdminRoutes';
 import { MDBDataTable } from 'mdbreact';
 import Layout from '../layout/Layout';
-import moment from 'moment';
-import axios from 'axios';
 import Loader from '../layout/Loader';
 import FormatCurrency from '../FormatCurrency';
 import ReactToPrint from 'react-to-print';
+import { AuthContext } from '../../context';
+import moment from 'moment';
+import axios from 'axios';
+import { Modal } from 'antd';
 
 const { confirm } = Modal;
 
 const ManageProductsAboutToExpire = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadProductsAboutToExpire();
-  }, []);
+  }, [auth?.token]);
 
   const showPrintData = () => {
     return showModal();

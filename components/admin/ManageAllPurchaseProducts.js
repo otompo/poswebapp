@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
 import { Button, Modal, Spin } from 'antd';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import AdminRoute from '../../components/routes/AdminRoutes';
 import Layout from '../../components/layout/Layout';
-import Loader from '../../components/layout/Loader';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
@@ -17,10 +16,12 @@ import renderHTML from 'react-render-html';
 import moment from 'moment';
 import ReactToPrint from 'react-to-print';
 import { toast } from 'react-hot-toast';
+import { AuthContext } from '../../context';
 
 const { confirm } = Modal;
 
 function ManageAllPurchaseProducts(props) {
+  const [auth, setAuth] = useContext(AuthContext);
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
   const [startdate, enddate] = dateRange;
   const [productsPurchase, setProductsPurchase] = useState([]);
@@ -95,10 +96,9 @@ function ManageAllPurchaseProducts(props) {
 
   useEffect(() => {
     handlePurcahaseSubmit();
-  }, [success]);
+  }, [auth?.token, success]);
 
   /**
-   *
    * @param id
    * @param newQuantity
    */
@@ -129,10 +129,6 @@ function ManageAllPurchaseProducts(props) {
       setSuccess(false);
     }
   };
-
-  /**
-   * ***********************************************
-   */
 
   const handlePurcahaseSubmit = async () => {
     try {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { MDBDataTable } from 'mdbreact';
 import { Spin, Modal, Select, Button, Tooltip } from 'antd';
 import download from 'downloadjs';
@@ -9,17 +9,19 @@ import {
   SyncOutlined,
   ExclamationCircleOutlined,
   UploadOutlined,
-  RedoOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
-import AdminRoute from '../routes/AdminRoutes';
 import Layout from '../layout/Layout';
 import { toast } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
+import AdminRoute from '../routes/AdminRoutes';
 import 'react-datepicker/dist/react-datepicker.css';
+import { saveAs } from 'file-saver';
 import FormatCurrency from '../FormatCurrency';
 import qrcode from 'qrcode';
+import DataCard from '../dataCard';
+import { AuthContext } from '../../context';
 const { confirm } = Modal;
 const { Option } = Select;
 
@@ -32,6 +34,7 @@ const ManageProducts = () => {
     loading: false,
   });
   const [products, setProducts] = useState([]);
+  const [auth, setAuth] = useContext(AuthContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [ok, setOk] = useState(false);
   const [expireDate, setExpireDate] = useState(new Date());
@@ -51,7 +54,6 @@ const ManageProducts = () => {
   const [actionTriggered, setActionTriggered] = useState('');
   const [quantity, setQuantity] = useState('');
   const [file, setFile] = useState('');
-  let currentQty = tempData[1];
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -77,7 +79,7 @@ const ManageProducts = () => {
     loadTotalOutOfStock();
     loadTotalAboutToExpire();
     loadTotalExpired();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const genarateQrCode = (product) => {
     let stringdata = JSON.stringify(product);
@@ -149,8 +151,7 @@ const ManageProducts = () => {
       setProducts(data.products);
       setValues({ ...values, loading: false });
     } catch (err) {
-      console.log(err);
-      toast.error(err.response.data.message);
+      console.log(err.response.data.message);
       setValues({ ...values, loading: false });
     }
   };
@@ -316,36 +317,6 @@ const ManageProducts = () => {
     }
   };
 
-  const loadEditQtyData = (name, slug, quantity) => {
-    let tempData = [name, quantity, slug];
-    setTempData((item) => [...tempData]);
-    // console.log(tempData);
-    return showModal();
-  };
-
-  const handleQuantityRestock = async (e) => {
-    e.preventDefault();
-
-    try {
-      setSuccess(true);
-      const { data } = await axios.put(
-        `/api/admin/products/outofstock/update/${tempData[2]}`,
-        {
-          quantity,
-          currentQty,
-        },
-      );
-      toast.success('Success');
-      setQuantity('');
-      setSuccess(false);
-      setIsModalVisible(false);
-    } catch (err) {
-      toast.error(err.response.data);
-      setSuccess(false);
-      setQuantity('');
-    }
-  };
-
   const setData = () => {
     const data = {
       columns: [
@@ -447,6 +418,7 @@ const ManageProducts = () => {
                       onClick={() => {
                         setIsModalVisible(true);
                         genarateQrCode(product);
+                        setTempData(product);
                       }}
                     >
                       QRCODE
@@ -462,6 +434,11 @@ const ManageProducts = () => {
     return data;
   };
 
+  const handleDownload = (e) => {
+    e.preventDefault();
+    saveAs(qrCodeData, 'image.jpg');
+  };
+
   return (
     <Layout title="Manage Products">
       <AdminRoute>
@@ -470,36 +447,30 @@ const ManageProducts = () => {
             <div className="col-md-2">
               <Link href="/admin/products/instock">
                 <a>
-                  <div className="containerItems">
-                    <div className="content">
-                      <h4>Instock</h4>
-                      <p>{totalInStock && totalInStock} </p>
-                    </div>
-                  </div>
+                  <DataCard
+                    title="Instock"
+                    SubTitle={totalInStock && totalInStock}
+                  />
                 </a>
               </Link>
             </div>
             <div className="col-md-2">
               <Link href="/admin/products/outofstock">
                 <a>
-                  <div className="containerItems">
-                    <div className="content">
-                      <h4>Out Of Stock</h4>
-                      <p>{totalOutOfStock && totalOutOfStock} </p>
-                    </div>
-                  </div>
+                  <DataCard
+                    title="Out Of Stock"
+                    SubTitle={totalOutOfStock && totalOutOfStock}
+                  />
                 </a>
               </Link>
             </div>
             <div className="col-md-2">
               <Link href="/admin/products/aboutofstock">
                 <a>
-                  <div className="containerItems">
-                    <div className="content">
-                      <h4>About to go outof Stock</h4>
-                      <p>{totalAboutOutStock && totalAboutOutStock} </p>
-                    </div>
-                  </div>
+                  <DataCard
+                    title="About to go outof Stock"
+                    SubTitle={totalAboutOutStock && totalAboutOutStock}
+                  />
                 </a>
               </Link>
             </div>
@@ -507,24 +478,20 @@ const ManageProducts = () => {
             <div className="col-md-2">
               <Link href="/admin/products/abouttoexpire">
                 <a>
-                  <div className="containerItems">
-                    <div className="content">
-                      <h4> About to Expire</h4>
-                      <p>{totalAboutToExpire && totalAboutToExpire}</p>
-                    </div>
-                  </div>
+                  <DataCard
+                    title="About to Expire"
+                    SubTitle={totalAboutToExpire && totalAboutToExpire}
+                  />
                 </a>
               </Link>
             </div>
             <div className="col-md-2">
               <Link href="/admin/products/expired">
                 <a>
-                  <div className="containerItems">
-                    <div className="content">
-                      <h4>Expired</h4>
-                      <p>{totalExpire && totalExpire}</p>
-                    </div>
-                  </div>
+                  <DataCard
+                    title="Expired"
+                    SubTitle={totalExpire && totalExpire}
+                  />
                 </a>
               </Link>
             </div>
@@ -599,7 +566,10 @@ const ManageProducts = () => {
               <span>Add Product</span>
             ) : (
               <>
-                <span className="lead text-uppercase">Genarate QRCode</span>
+                <span className="lead text-uppercase">
+                  Genarate QRCode for{' '}
+                  <span className="text-primary">{tempData.name}</span>
+                </span>
               </>
             )
           }
@@ -711,22 +681,19 @@ const ManageProducts = () => {
           ) : (
             <div className="row">
               <div className="col-md-12">
-                <form>
-                  <div className="form-group">
-                    <img src={qrCodeData} width="100%" height="100%" />
-                  </div>
+                <div className="form-group">
+                  <img src={qrCodeData} width="100%" height="100%" />
+                </div>
 
-                  <div className="d-grid gap-2 my-2 text-center">
-                    <button
-                      className="btn btn-primary btn-block"
-                      // disabled={!values.name || loading}
-                      // type="submit"
-                    >
-                      {/* {ok ? <SyncOutlined spin /> : 'Submit'} */}
-                      DOWNLOAD QRCODE
-                    </button>
-                  </div>
-                </form>
+                <div className="d-grid gap-2 my-2 text-center">
+                  <button
+                    className="btn btn-primary btn-block"
+                    type="button"
+                    onClick={handleDownload}
+                  >
+                    DOWNLOAD QRCODE
+                  </button>
+                </div>
               </div>
             </div>
           )}

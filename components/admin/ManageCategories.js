@@ -8,14 +8,16 @@ import {
 } from '@ant-design/icons';
 import AdminRoute from '../routes/AdminRoutes';
 import Layout from '../layout/Layout';
-import moment from 'moment';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Loader from '../layout/Loader';
+import { AuthContext } from '../../context';
+import { useContext } from 'react';
 
 const { confirm } = Modal;
 
 const ManageCategories = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const [values, setValues] = useState({
     name: '',
     loading: false,
@@ -39,7 +41,7 @@ const ManageCategories = () => {
 
   useEffect(() => {
     showCategories();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });

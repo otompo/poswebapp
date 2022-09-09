@@ -13,8 +13,11 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 import AdminRoute from '../routes/AdminRoutes';
+import { useContext } from 'react';
+import { AuthContext } from '../../context';
 
 const ManageUsers = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const { confirm } = Modal;
   const [values, setValues] = useState({
     name: '',
@@ -32,7 +35,7 @@ const ManageUsers = () => {
   useEffect(() => {
     loadUsers();
     getTotalUsersInTrash();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });

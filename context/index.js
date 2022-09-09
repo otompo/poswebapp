@@ -9,13 +9,9 @@ const AuthProvider = ({ children }) => {
     token: '',
   });
 
+  // console.log('token', auth);
   // config axios
-  if (process.server) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.token}`;
-  } else {
-    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.token}`;
-  }
+  axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.token}`;
 
   useEffect(() => {
     if (localStorage.getItem('auth')) {

@@ -18,7 +18,6 @@ const AdminRoute = ({ children }) => {
   const getCurrentAdmin = async () => {
     try {
       const { data } = await axios.get('/api/admin/current');
-      console.log('data', data);
       setLoading(false);
     } catch (err) {
       console.log(err);

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useContext, useRef, useEffect, useState } from 'react';
 import Layout from '../layout/Layout';
 import AdminRoute from '../routes/AdminRoutes';
 import FormatCurrency from '../FormatCurrency';
@@ -15,9 +15,11 @@ import ReactToPrint from 'react-to-print';
 import ConvertError from '../../hooks/ConvertError';
 import useSettings from '../../hooks/useSettings';
 import renderHTML from 'react-render-html';
+import { AuthContext } from '../../context';
 const { confirm } = Modal;
 
 function ManageReports(props) {
+  const [auth, setAuth] = useContext(AuthContext);
   const [salesStartDate, setSalesStartDate] = useState(new Date());
   const [salesEndDate, setSalesEndDate] = useState(new Date());
 
@@ -84,7 +86,7 @@ function ManageReports(props) {
 
   useEffect(() => {
     getAllReports();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const handleCostSubmit = async () => {
     try {

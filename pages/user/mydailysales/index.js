@@ -1,7 +1,6 @@
-import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
-import { Button, Modal, Avatar } from 'antd';
-import React, { useRef, useEffect, useState } from 'react';
+import { Button, Modal } from 'antd';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import FormatCurrency from '../../../components/FormatCurrency';
 import UserRoute from '../../../components/routes/UserRoutes';
 import Layout from '../../../components/layout/Layout';
@@ -11,11 +10,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { PrinterOutlined } from '@ant-design/icons';
 import useSettings from '../../../hooks/useSettings';
 import renderHTML from 'react-render-html';
+import axios from 'axios';
 import moment from 'moment';
 import ReactToPrint from 'react-to-print';
+import { AuthContext } from '../../../context';
 const { confirm } = Modal;
 
 const Index = () => {
+  const [auth, setAuth] = useContext(AuthContext);
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
   const [startdate, enddate] = dateRange;
   const [sales, setSales] = useState([]);
@@ -54,7 +56,7 @@ const Index = () => {
 
   useEffect(() => {
     handleSalesSubmit();
-  }, []);
+  }, [auth?.token]);
 
   const handleSalesSubmit = async () => {
     try {

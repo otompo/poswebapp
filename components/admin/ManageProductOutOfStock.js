@@ -17,10 +17,12 @@ import { PrinterOutlined } from '@ant-design/icons';
 import useSettings from '../../hooks/useSettings';
 import renderHTML from 'react-render-html';
 import moment from 'moment';
+import { AuthContext } from '../../context';
 
 const { confirm } = Modal;
 
 function ManageProductOutOfStock(props) {
+  const [auth, setAuth] = useContext(AuthContext);
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
   const [products, setProducts] = useState([]);
@@ -65,7 +67,7 @@ function ManageProductOutOfStock(props) {
   useEffect(() => {
     loadProductsOutOfStock();
     showPurchaseProducts();
-  }, [success]);
+  }, [auth?.token, success]);
 
   const componentRef = useRef();
 

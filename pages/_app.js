@@ -6,6 +6,7 @@ import 'antd/dist/antd.css';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '../context';
 import { CartProvider } from '../context/cartContext';
+import { ProductProvider } from '../context/productsContext';
 
 function MyApp({ Component, pageProps }) {
   const [showChild, setShowChild] = useState(false);
@@ -18,10 +19,12 @@ function MyApp({ Component, pageProps }) {
   }
   return (
     <AuthProvider>
-      <CartProvider>
-        <Toaster />
-        <Component {...pageProps} />
-      </CartProvider>
+      <ProductProvider>
+        <CartProvider>
+          <Toaster />
+          <Component {...pageProps} />
+        </CartProvider>
+      </ProductProvider>
     </AuthProvider>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useContext, useRef, useEffect, useState } from 'react';
 import AdminRoute from '../routes/AdminRoutes';
 import Layout from '../layout/Layout';
 import moment from 'moment';
@@ -12,11 +12,13 @@ import FormatCurrency from '../FormatCurrency';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MDBDataTable } from 'mdbreact';
+import { AuthContext } from '../../context';
 
 const { confirm } = Modal;
 const { Option } = Select;
 
 function ManageUserDailySales(props) {
+  const [auth, setAuth] = useContext(AuthContext);
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
   const [startdate, enddate] = dateRange;
   const [sales, setSales] = useState([]);
@@ -54,7 +56,7 @@ function ManageUserDailySales(props) {
   useEffect(() => {
     handleSalesSubmit();
     loadUsers();
-  }, []);
+  }, [auth?.token]);
 
   const loadUsers = async () => {
     try {
