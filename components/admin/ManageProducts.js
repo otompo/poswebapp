@@ -20,7 +20,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { saveAs } from 'file-saver';
 import FormatCurrency from '../FormatCurrency';
 import qrcode from 'qrcode';
-import DataCard from '../dataCard';
+import DataCard from '../DataCard';
 import { AuthContext } from '../../context';
 const { confirm } = Modal;
 const { Option } = Select;
