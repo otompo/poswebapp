@@ -51,23 +51,61 @@ export const readUser = async (req, res) => {
 };
 
 export const updateProfile = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.user._id).select('+active');
-  user.name = req.body.name;
-  user.email = req.body.email;
-  user.contactNum = req.body.contactNum;
-  await user.save();
+  const { name, email, contactNum, password } = req.body;
+
+  const user = await User.findById(req.user._id).select('+active +password');
+  // console.log(req.body);
+  // compare password
+  // if (!bcrypt.compareSync(prevPassword, user.password)) {
+  //   return next(new AppError("previous password is wrong", 401));
+  // }
+
+  // check password length
+  if (password && password.length < 6) {
+    return next(new AppError('Password should be 6 characters long', 500));
+  }
+
+  // check valid email
+  // if (!emaliValidator.validate(email)) {
+  //   return next(new AppError('Invalid email', 401));
+  // }
+
+  const exist = await User.findOne({ email });
+
+  if (exist && exist._id.toString() !== user._id.toString()) {
+    return next(new AppError('Email is taken', 401));
+  }
+
+  const hashedPassword = password ? await bcrypt.hashSync(password) : undefined;
+
   const token = signToken(user);
-  res.send({
-    token,
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    contactNum: user.contactNum,
-    username: user.username,
-    active: user.active,
-    generatedPasword: user.generatedPasword,
-  });
+  const updated = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      username: slugify(name) + `${nanoid(5)}`,
+      name: name || user.name,
+      email: email || user.email,
+      contactNum: contactNum || user.contactNum,
+      password: hashedPassword || user.password,
+      generatedPasword: ' ',
+    },
+    { new: true },
+  );
+  res.json(updated);
+
+  // await user.save();
+  // const token = signToken(user);
+  // res.send({
+  //   token,
+  //   _id: user._id,
+  //   name: user.name,
+  //   email: user.email,
+  //   role: user.role,
+  //   contactNum: user.contactNum,
+  //   username: user.username,
+  //   active: user.active,
+  //   generatedPasword: user.generatedPasword,
+  // });
 });
 
 export const updatePassword = catchAsync(async (req, res, next) => {

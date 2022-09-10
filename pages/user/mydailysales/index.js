@@ -10,10 +10,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { PrinterOutlined } from '@ant-design/icons';
 import useSettings from '../../../hooks/useSettings';
 import renderHTML from 'react-render-html';
-import axios from 'axios';
-import moment from 'moment';
 import ReactToPrint from 'react-to-print';
 import { AuthContext } from '../../../context';
+import axios from 'axios';
+import moment from 'moment';
+
 const { confirm } = Modal;
 
 const Index = () => {
@@ -201,7 +202,7 @@ const Index = () => {
           </div> */}
         </div>
         <hr />
-        {/* <pre>{JSON.stringify(sales, null, 2)}</pre> */}
+
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-12">

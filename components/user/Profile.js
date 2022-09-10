@@ -1,71 +1,58 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useRouter } from 'next/router';
-import { SyncOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, Divider, Input, Row } from 'antd';
 import { toast } from 'react-hot-toast';
 import UserRoute from '../routes/UserRoutes';
 import Layout from '../layout/Layout';
 import axios from 'axios';
+import { AuthContext } from '../../context';
 
 const UserProfilePage = () => {
-  const router = useRouter();
-  const { id } = router.query;
-
-  const [values, setValues] = useState({
-    name: '',
-    username: '',
-    email: '',
-    loading: false,
-  });
+  const [auth, setAuth] = useContext(AuthContext);
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [contactNum, setContactNum] = useState('');
+  const [bio, setBio] = useState('');
 
   const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [ok, setOk] = useState(false);
-
-  const [passwordCurrent, setPasswordCurrent] = useState('');
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
     loadUser();
-  }, [id, success]);
-
-  const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
+  }, [auth?.token, success]);
 
   const loadUser = async () => {
     try {
-      setOk(true);
-      const { data } = await axios.get(`/api/user/profile`);
-      setValues(data);
-      setOk(false);
+      const { data } = await axios.get(`/api/user`);
+      setName(data.name);
+      setEmail(data.email);
+      setContactNum(data.contactNum);
     } catch (err) {
       console.log(err);
-      setOk(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setValues({ ...values, loading: true });
-      const { data } = await axios.put(`/api/user/updateprofile`, {
-        ...values,
+      setLoading(true);
+      const { data } = await axios.put(`/api/user`, {
+        name,
+        email,
+        contactNum,
+        password,
       });
-
-      const as = JSON.parse(await window.localStorage.getItem('auth'));
-      as.user = data;
-
-      dispatch({
-        type: 'UPDATE_SUCCESS',
-        payload: as.user,
-      });
-
+      if (auth?.user?._id === data._id) {
+        setAuth({ ...auth, user: data });
+        let fromLocalStorage = JSON.parse(localStorage.getItem('auth'));
+        fromLocalStorage.user = data;
+        localStorage.setItem('auth', JSON.stringify(fromLocalStorage));
+      }
       toast.success('Success');
-      setValues({ ...values, loading: false });
-      //   updateUser(data);
+      setLoading(false);
     } catch (err) {
       toast.error(err.response.data.message);
-      setValues({ ...values, loading: false });
+      setLoading(false);
     }
   };
 
@@ -102,110 +89,55 @@ const UserProfilePage = () => {
   };
 
   return (
-    <Layout title={values.name && values.name}>
+    <Layout title="">
       <UserRoute>
-        <div>
-          {TopInfo()}
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-md-4">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="card-title">
-                      <h6 className="text-uppercase">Update Profile</h6>
-                    </div>
-                    <form onSubmit={handleSubmit}>
-                      <div className="form-group">
-                        {' '}
-                        <input
-                          type="text"
-                          name="name"
-                          className="form-control mb-4 p-2"
-                          onChange={handleChange}
-                          value={values.name}
-                          placeholder="Enter name"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <input
-                          name="email"
-                          type="email"
-                          className="form-control mb-4 p-2"
-                          value={values.email}
-                          onChange={handleChange}
-                          placeholder="Enter email"
-                        />
-                      </div>
+        <Row>
+          <Col span={14} offset={10}>
+            <h4 className="text-uppercase">Profile Update</h4>
+          </Col>
+          <Divider />
+          <Col span={12} offset={6}>
+            <Input
+              style={{ margin: '20px 0px 10px 0px' }}
+              size="large"
+              placeholder="Full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              style={{ margin: '10px 0px 10px 0px' }}
+              size="large"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              style={{ margin: '10px 0px 10px 0px' }}
+              size="large"
+              placeholder="contact Number"
+              value={contactNum}
+              onChange={(e) => setContactNum(e.target.value)}
+            />
 
-                      <div className="d-grid gap-2 my-2">
-                        <button
-                          // disabled={values.loading}
-                          className="btn btn-primary"
-                          type="submit"
-                        >
-                          {values.loading ? (
-                            <SyncOutlined spin />
-                          ) : (
-                            'Update Profile'
-                          )}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="card-title">
-                      <h6 className="text-uppercase">Update Password</h6>
-                      <form
-                        onSubmit={handlePasswordChange}
-                        encType="multipart/form-data"
-                      >
-                        <input
-                          type="password"
-                          className="form-control mb-4 p-2"
-                          value={passwordCurrent}
-                          onChange={(e) => setPasswordCurrent(e.target.value)}
-                          placeholder="Enter Current Password"
-                          required
-                        />
+            <Input.Password
+              style={{ margin: '10px 0px 10px 0px' }}
+              size="large"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-                        <input
-                          type="text"
-                          className="form-control mb-4 p-2"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Enter New Password"
-                          required
-                        />
-                        <div className="d-grid gap-2">
-                          <button
-                            disabled={!passwordCurrent || !password || loading}
-                            className="btn  w-100"
-                            type="submit"
-                            style={{
-                              backgroundColor: '#33195a',
-                              color: '#fff',
-                            }}
-                          >
-                            {loading ? (
-                              <SyncOutlined spin />
-                            ) : (
-                              'Update Password'
-                            )}
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-4"></div>
-            </div>
-          </div>
-        </div>
+            <Button
+              onClick={handleSubmit}
+              type="primary"
+              style={{ margin: '10px 0px 10px 0px' }}
+              loading={loading}
+              block
+            >
+              Submit
+            </Button>
+          </Col>
+        </Row>
       </UserRoute>
     </Layout>
   );
