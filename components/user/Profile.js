@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Avatar, Button, Col, Divider, Input, Row } from 'antd';
+import { Button, Col, Divider, Input, Row } from 'antd';
 import { toast } from 'react-hot-toast';
 import UserRoute from '../routes/UserRoutes';
 import Layout from '../layout/Layout';
@@ -13,13 +13,10 @@ const UserProfilePage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [contactNum, setContactNum] = useState('');
-  const [bio, setBio] = useState('');
-
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     loadUser();
-  }, [auth?.token, success]);
+  }, [auth?.token]);
 
   const loadUser = async () => {
     try {
@@ -54,38 +51,6 @@ const UserProfilePage = () => {
       toast.error(err.response.data.message);
       setLoading(false);
     }
-  };
-
-  const handlePasswordChange = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const { data } = await axios.patch(`/api/user/updatepassword`, {
-        passwordCurrent,
-        password,
-      });
-      setPassword('');
-      setPasswordCurrent('');
-      toast.success('Success');
-      setLoading(false);
-    } catch (err) {
-      toast.error(err.response.data.message);
-      setLoading(false);
-    }
-  };
-
-  const TopInfo = () => {
-    return (
-      <div className="container-fluid mb-5 mt-3">
-        <div className="row">
-          <div className="col-md-8">
-            <h1 className="lead mx-5">{values && values.name} Profile</h1>
-          </div>
-          <div className="col-md-4"></div>
-        </div>
-        <hr />
-      </div>
-    );
   };
 
   return (
