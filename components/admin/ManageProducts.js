@@ -138,7 +138,7 @@ const ManageProducts = () => {
   const loadCategories = async () => {
     try {
       const { data } = await axios.get(`/api/admin/category`);
-      setLoadedCategories(data.category);
+      setLoadedCategories(category);
     } catch (err) {
       console.log(err);
     }

@@ -1,9 +1,9 @@
 import Product from '../models/productModel';
+import Category from '../models/categoryModel';
 import catchAsync from '../utils/catchAsync';
 import slugify from 'slugify';
 import AppError from '../utils/appError';
 const { Parser } = require('json2csv');
-
 // const nodemailer = require('nodemailer');
 
 export const createProduct = catchAsync(async (req, res, next) => {
@@ -253,3 +253,20 @@ export const updateAppQuantity = catchAsync(async (req, res, next) => {
   );
   res.send({ ok: true });
 });
+
+export const getSingleProductsByCategory = catchAsync(
+  async (req, res, next) => {
+    const category = await Category.findById(req.query.id);
+    if (!category) {
+      return next(new AppError('category not found', 404));
+    }
+    let categoryId = category._id;
+    const product = await Product.find({ category: categoryId })
+      .populate('category', '_id name')
+      .sort({ createdAt: -1 });
+    // .select(
+    //   "_id name slug category createdAt featuredImage description location"
+    // );
+    res.send(product);
+  },
+);

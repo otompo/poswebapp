@@ -52,7 +52,7 @@ const ManageCategories = () => {
       setValues({ ...values, loading: true });
       setOk(true);
       const { data } = await axios.get(`/api/admin/category`);
-      setCategories(data.category);
+      setCategories(category);
       setValues({ ...values, loading: false });
       setOk(false);
     } catch (err) {

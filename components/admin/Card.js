@@ -1,5 +1,4 @@
 import { Fragment } from 'react';
-import { Avatar } from 'antd';
 
 const Card = ({ icon, cade_title, cade_total, backgroundColor }) => {
   return (

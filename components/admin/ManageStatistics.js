@@ -7,6 +7,7 @@ import Layout from '../layout/Layout';
 import FormatCurrency from '../FormatCurrency';
 import { Bar } from 'react-chartjs-2';
 import { AuthContext } from '../../context';
+import Card from './Card';
 
 const ManageStatistics = () => {
   const [auth, setAuth] = useContext(AuthContext);
@@ -82,66 +83,54 @@ const ManageStatistics = () => {
         {/* {reports && reports.map((report) => <h6>{report.totalSales}</h6>)} */}
         <hr />
         <div className="row mb-3" id="statistics">
-          <div className="col-md-3">
-            <div className="card my-4 bg-primary">
-              <div className="card-body text-center">
-                <h4>SALES MADE SO FAR</h4>
-                <div className="text">
-                  {grandTotalSales &&
-                    grandTotalSales.map((total, i) => (
-                      <h2 className="text-white" key={i}>
-                        {FormatCurrency(Number(total.totalSales))}
-                      </h2>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card my-4 bg-warning">
-              <div className="card-body text-center">
-                <h4>GRAND PRODUCTS COST PRICE</h4>
-                <div className="text">
-                  {products &&
-                    products.map((product, i) => (
-                      <h2 className="text-white" key={i}>
-                        {FormatCurrency(product.totalcost)}
-                      </h2>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card my-4 bg-secondary">
-              <div className="card-body text-center">
-                <h4>GRAND PRODUCTS SELLING PRICE</h4>
-                <div className="text">
-                  {products &&
-                    products.map((product, i) => (
-                      <h2 className="text-white" key={i}>
-                        {FormatCurrency(product.totalSelles)}
-                      </h2>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card my-4 bg-success">
-              <div className="card-body text-center">
-                <h4>TOTAL PRODUCTS QTY</h4>
-                <div className="text">
-                  {products &&
-                    products.map((product, i) => (
-                      <h2 className="text-white" key={i}>
-                        {product.totalQuantity}
-                      </h2>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <Card
+            backgroundColor="#A2A2A2"
+            cade_title="SALES MADE SO FAR"
+            cade_total={
+              grandTotalSales &&
+              grandTotalSales.map((total, i) => (
+                <h2 className="text-white" key={i}>
+                  {FormatCurrency(Number(total.totalSales))}
+                </h2>
+              ))
+            }
+          />
+          <Card
+            backgroundColor="#A2A2A2"
+            cade_title="GRAND PRODUCTS COST PRICE"
+            cade_total={
+              products &&
+              products.map((product, i) => (
+                <h2 className="text-white" key={i}>
+                  {FormatCurrency(product.totalcost)}
+                </h2>
+              ))
+            }
+          />
+          <Card
+            backgroundColor="#A2A2A2"
+            cade_title="GRAND PRODUCTS SELLING PRICE"
+            cade_total={
+              products &&
+              products.map((product, i) => (
+                <h2 className="text-white" key={i}>
+                  {FormatCurrency(product.totalSelles)}
+                </h2>
+              ))
+            }
+          />
+          <Card
+            backgroundColor="#A2A2A2"
+            cade_title="TOTAL PRODUCTS QTY"
+            cade_total={
+              products &&
+              products.map((product, i) => (
+                <h2 className="text-white" key={i}>
+                  {product.totalQuantity}
+                </h2>
+              ))
+            }
+          />
 
           {/* <div className="col-md-3">
             <div className="card my-4 bg-danger">
