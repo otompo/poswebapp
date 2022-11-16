@@ -34,7 +34,6 @@ export const signin = catchAsync(async (req, res, next) => {
 
 export const currentUser = async (req, res) => {
   try {
-    await User.findById(req.user._id).select('-password').exec();
     res.json({ ok: true });
   } catch (err) {
     console.log(err);
@@ -54,11 +53,6 @@ export const updateProfile = catchAsync(async (req, res, next) => {
   const { name, email, contactNum, password } = req.body;
 
   const user = await User.findById(req.user._id).select('+active +password');
-  // console.log(req.body);
-  // compare password
-  // if (!bcrypt.compareSync(prevPassword, user.password)) {
-  //   return next(new AppError("previous password is wrong", 401));
-  // }
 
   // check password length
   if (password && password.length < 6) {

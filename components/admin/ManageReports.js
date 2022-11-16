@@ -303,7 +303,7 @@ function ManageReports(props) {
       <AdminRoute>
         <h1 className="lead">Manage Reports</h1>
         <hr />
-        <div className="row">
+        <div className="row" id="reports">
           <div className="col-md-4">
             <h4 className="lead text-center">COST START AND END DATE</h4>
 

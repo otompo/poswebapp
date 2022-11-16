@@ -7,19 +7,7 @@ import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 
 export const currentAdmin = catchAsync(async (req, res, next) => {
-  // await User.findById(req.user._id).select('-password');
-
-  // if (!user.role.includes('admin')) {
-  //   return next(new AppError('Not a admin', 400));
-  // } else {
-  //   res.json({ ok: true });
-  // }
-  try {
-    // await User.findById(req.user._id).select('-password').exec();
-    res.json({ ok: true });
-  } catch (err) {
-    console.log(err);
-  }
+  res.json({ ok: true });
 });
 
 // add staff

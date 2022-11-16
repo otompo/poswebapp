@@ -299,6 +299,11 @@ a {
   color: #000;
 
 }
+#reports .card-body {
+ 
+  padding: 0rem !important;
+}
+
 /* ****************************Import Styling********************************* */
 
 @import url('./Footer.css');
