@@ -10,8 +10,7 @@ const handler = nc({ onError });
 
 dbConnect();
 
+handler.use(isAuth).get(getAllProducts);
 handler.use(isAuth, isAdmin).post(createProduct);
-
-handler.use(isAuth, isAdmin).get(getAllProducts);
 
 export default handler;
