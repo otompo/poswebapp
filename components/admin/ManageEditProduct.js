@@ -58,7 +58,7 @@ const ManageEditProduct = () => {
   const loadCategories = async () => {
     try {
       const { data } = await axios.get(`/api/admin/category`);
-      setCategories(data.category);
+      setCategories(data);
     } catch (err) {
       console.log(err);
     }

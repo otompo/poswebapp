@@ -107,6 +107,7 @@ const Dashboard = ({ children }) => {
         <div className="col-md-12">
           <div className="card">
             <div className="card-body">
+              {/* <pre>{JSON.stringify(dailySales, null, 4)}</pre> */}
               <div className="card-title ">
                 <h5 className="font-weight-bold text-center">
                   Daily Sales Chart

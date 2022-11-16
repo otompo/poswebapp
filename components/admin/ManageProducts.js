@@ -39,6 +39,7 @@ const ManageProducts = () => {
   const [ok, setOk] = useState(false);
   const [expireDate, setExpireDate] = useState(new Date());
   const [selectedCategory, setSelectedCategory] = useState('');
+
   const [loadedCategories, setLoadedCategories] = useState([]);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,12 +53,8 @@ const ManageProducts = () => {
   const [tempData, setTempData] = useState([]);
   const [qrCodeData, setqrCodeData] = useState('');
   const [actionTriggered, setActionTriggered] = useState('');
-  const [quantity, setQuantity] = useState('');
+  // const [quantity, setQuantity] = useState('');
   const [file, setFile] = useState('');
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -138,7 +135,7 @@ const ManageProducts = () => {
   const loadCategories = async () => {
     try {
       const { data } = await axios.get(`/api/admin/category`);
-      setLoadedCategories(category);
+      setLoadedCategories(data);
     } catch (err) {
       console.log(err);
     }
@@ -209,7 +206,7 @@ const ManageProducts = () => {
             `/api/admin/products/${removed[0]._id}`,
           );
           // console.log('LESSON DELETED =>', data);
-          toast.success('Product Deleted Successfully');
+          toast.success('Success');
           setLoading(false);
         } catch (err) {
           toast.error(err.response.data.message);
@@ -236,22 +233,6 @@ const ManageProducts = () => {
     setChecked(all);
     setSelectedCategory(all);
     // formData.set('categories', all);
-  };
-
-  const showCategories = () => {
-    return (
-      categories &&
-      categories.map((c, i) => (
-        <li key={i} className="list-unstyled">
-          <input
-            onChange={handleToggle(c._id)}
-            type="checkbox"
-            className="mr-2"
-          />
-          <label className="form-check-label">{c.name}</label>
-        </li>
-      ))
-    );
   };
 
   const handleDataExport = async () => {
@@ -668,6 +649,7 @@ const ManageProducts = () => {
                       placeholder="Select Category"
                       style={{ width: '100%' }}
                       onChange={(v) => setSelectedCategory(v)}
+                      mode="multiple"
                     >
                       {loadedCategories &&
                         loadedCategories.map((item) => (
