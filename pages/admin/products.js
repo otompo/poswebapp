@@ -1,11 +1,7 @@
 import ManageProducts from '../../components/admin/ManageProducts';
 
 const OurWorksIndex = () => {
-  return (
-    <>
-      <ManageProducts />
-    </>
-  );
+  return <ManageProducts />;
 };
 
 export default OurWorksIndex;

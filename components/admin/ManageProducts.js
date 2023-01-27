@@ -368,12 +368,10 @@ const ManageProducts = () => {
                   <Tooltip title={`Edit ${product.name}`} color="green">
                     <div className="col-md-4">
                       <Link href={`/admin/products/${product.slug}`}>
-                        <a>
-                          <EditOutlined
-                            className="text-success d-flex justify-content-center"
-                            style={{ cursor: 'pointer', fontSize: 25 }}
-                          />
-                        </a>
+                        <EditOutlined
+                          className="text-success d-flex justify-content-center"
+                          style={{ cursor: 'pointer', fontSize: 25 }}
+                        />
                       </Link>
                     </div>
                   </Tooltip>
@@ -427,53 +425,43 @@ const ManageProducts = () => {
           <div className="row  mt-3">
             <div className="col-md-2">
               <Link href="/admin/products/instock">
-                <a>
-                  <DataCard
-                    title="Instock"
-                    SubTitle={totalInStock && totalInStock}
-                  />
-                </a>
+                <DataCard
+                  title="Instock"
+                  SubTitle={totalInStock && totalInStock}
+                />
               </Link>
             </div>
             <div className="col-md-2">
               <Link href="/admin/products/outofstock">
-                <a>
-                  <DataCard
-                    title="Out Of Stock"
-                    SubTitle={totalOutOfStock && totalOutOfStock}
-                  />
-                </a>
+                <DataCard
+                  title="Out Of Stock"
+                  SubTitle={totalOutOfStock && totalOutOfStock}
+                />
               </Link>
             </div>
             <div className="col-md-2">
               <Link href="/admin/products/aboutofstock">
-                <a>
-                  <DataCard
-                    title="About to go outof Stock"
-                    SubTitle={totalAboutOutStock && totalAboutOutStock}
-                  />
-                </a>
+                <DataCard
+                  title="About to go outof Stock"
+                  SubTitle={totalAboutOutStock && totalAboutOutStock}
+                />
               </Link>
             </div>
 
             <div className="col-md-2">
               <Link href="/admin/products/abouttoexpire">
-                <a>
-                  <DataCard
-                    title="About to Expire"
-                    SubTitle={totalAboutToExpire && totalAboutToExpire}
-                  />
-                </a>
+                <DataCard
+                  title="About to Expire"
+                  SubTitle={totalAboutToExpire && totalAboutToExpire}
+                />
               </Link>
             </div>
             <div className="col-md-2">
               <Link href="/admin/products/expired">
-                <a>
-                  <DataCard
-                    title="Expired"
-                    SubTitle={totalExpire && totalExpire}
-                  />
-                </a>
+                <DataCard
+                  title="Expired"
+                  SubTitle={totalExpire && totalExpire}
+                />
               </Link>
             </div>
           </div>

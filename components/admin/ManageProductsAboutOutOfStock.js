@@ -189,11 +189,9 @@ function ManageProductsAboutOutOfStock(props) {
                 href={`/admin/products/purchase/view`}
                 className="bg-primary"
               >
-                <a>
-                  <Button shape="round" type="primary">
-                    VIEW ALL PURCHASED PRODUCTS{' '}
-                  </Button>
-                </a>
+                <Button shape="round" type="primary">
+                  VIEW ALL SUPPLY PRODUCTS{' '}
+                </Button>
               </Link>
             </div>
 

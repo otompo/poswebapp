@@ -182,15 +182,10 @@ function ManagePurchaseProducts(props) {
             </div>
 
             <div className="col-md-3">
-              <Link
-                href={`/admin/products/purchase/view`}
-                className="bg-primary"
-              >
-                <a>
-                  <Button shape="round" type="primary">
-                    VIEW ALL PURCHASED PRODUCTS{' '}
-                  </Button>
-                </a>
+              <Link href={`/admin/products/purchase/view`}>
+                <Button shape="round" type="primary">
+                  VIEW ALL SUPPLY PRODUCTS{' '}
+                </Button>
               </Link>
             </div>
 

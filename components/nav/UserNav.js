@@ -27,7 +27,7 @@ const UserNav = () => {
 
   return (
     <div className="nav flex-column nav-pills mt-2">
-      <Link href="/user">
+      <Link href="/user" legacyBehavior>
         <a className={`nav-link  ${current === '/user' && 'active'}`}>POS</a>
       </Link>
 
@@ -55,7 +55,7 @@ const UserNav = () => {
         </a>
       </Link> */}
 
-      <Link href="/user/mydailysales">
+      <Link href="/user/mydailysales" legacyBehavior>
         <a
           className={`nav-link  ${
             current === '/user/mydailysales' && 'active'

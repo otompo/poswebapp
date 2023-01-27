@@ -267,17 +267,15 @@ const ManageUsers = () => {
             <div className="col-md-3">
               <Tooltip title="View Users in Trash">
                 <Link href={`/admin/users/trash`}>
-                  <a>
-                    <Button shape="round" success>
-                      VIEW INACTIVE STAFF:{' '}
-                    </Button>
-                    <Badge
-                      count={totalInactive}
-                      style={{ backgroundColor: '#E7267A' }}
-                      className="pb-2 mr-2 my-2 m-1"
-                      showZero
-                    />
-                  </a>
+                  <Button shape="round" success>
+                    VIEW INACTIVE STAFF:{' '}
+                  </Button>
+                  <Badge
+                    count={totalInactive}
+                    style={{ backgroundColor: '#E7267A' }}
+                    className="pb-2 mr-2 my-2 m-1"
+                    showZero
+                  />
                 </Link>
               </Tooltip>
             </div>

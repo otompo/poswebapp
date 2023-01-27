@@ -148,17 +148,15 @@ function ManageTrashUsers(props) {
             </div>
             <div className="col-md-3">
               <Link href={`/admin/users`} className="bg-primary">
-                <a>
-                  <Button shape="round" success>
-                    TOTAL INACTIVE STAFF:{' '}
-                  </Button>
-                  <Badge
-                    count={totalInactive}
-                    style={{ backgroundColor: '#E7267A' }}
-                    className="pb-2 mr-2 my-2 m-1"
-                    showZero
-                  />
-                </a>
+                <Button shape="round" success>
+                  TOTAL INACTIVE STAFF:{' '}
+                </Button>
+                <Badge
+                  count={totalInactive}
+                  style={{ backgroundColor: '#E7267A' }}
+                  className="pb-2 mr-2 my-2 m-1"
+                  showZero
+                />
               </Link>
             </div>
             <div className="col-md-6">

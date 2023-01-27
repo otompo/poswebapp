@@ -15,7 +15,6 @@ import { toast } from 'react-hot-toast';
 import Loader from '../layout/Loader';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Link from 'next/link';
 import FormatCurrency from '../FormatCurrency';
 
 const { confirm } = Modal;
@@ -40,10 +39,6 @@ const ManageExpenses = () => {
   // const [selectedDate, setSelectedDate] = useState(
   //   Date(previousDate).toDateString,
   // );
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
 
   const handleOk = () => {
     setIsModalVisible(false);

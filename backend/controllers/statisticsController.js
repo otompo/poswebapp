@@ -2,7 +2,6 @@ import Sales from '../models/salesModel';
 import Product from '../models/productModel';
 import Report from '../models/reportsModel';
 import catchAsync from '../utils/catchAsync';
-import AppError from '../utils/appError';
 
 // get monthly plan - ADMIN   =>   /api/admin/bookings/bookingstats
 export const getMonthlyPlan = catchAsync(async (req, res, next) => {

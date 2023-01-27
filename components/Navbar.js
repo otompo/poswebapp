@@ -39,13 +39,11 @@ const Navbar = () => {
         <nav className="navbar">
           <Fade right>
             <Link href="/" className="logo">
-              <a>
-                <img
-                  src="/img/logo2.png"
-                  alt="POS"
-                  className="pb-1 ant-menu-item"
-                />
-              </a>
+              <img
+                src="/img/logo2.png"
+                alt="POS"
+                className="pb-1 ant-menu-item"
+              />
             </Link>
           </Fade>
           <div className="hamburger" onClick={handleClick}>
@@ -58,11 +56,9 @@ const Navbar = () => {
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li>
               <Link href="/user/manage-profile/update">
-                <a>
-                  <h5 className="text-white text-uppercase">
-                    {user && user.name}
-                  </h5>
-                </a>
+                <h5 className="text-white text-uppercase">
+                  {user && user.name}
+                </h5>
               </Link>
             </li>
           </ul>

@@ -1,4 +1,3 @@
-import { CaretUpOutlined, TeamOutlined, BookOutlined } from '@ant-design/icons';
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import Card from './Card';
