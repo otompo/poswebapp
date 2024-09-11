@@ -2,8 +2,8 @@ module.exports = {
   reactStrictMode: true,
   env: {
     DB_URL:
-      'mongodb+srv://sasco:oAPRV35UNyWLorpF@cluster0.fpvql.mongodb.net/posdb?retryWrites=true&w=majority',
-    DB_LOCAL: 'mongodb://localhost:27017/posdb',
+      '',
+    DB_LOCAL: '',
     JWT_SECRET: 'sfskftsfdssdsp3405059o53H530smdslf',
     JWT_COOKIE_EXPIRES_IN: '50',
     AWS_REGION: 'us-west-2',
